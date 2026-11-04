@@ -30,9 +30,10 @@ async function route(req, res) {
       const body = await upstream.text();
       res.writeHead(upstream.status, {'Content-Type':upstream.headers.get('content-type') || 'application/json; charset=utf-8','Cache-Control':'no-store'});
       return res.end(body);
-    } catch {
+    } catch (error) {
       res.writeHead(502, {'Content-Type':'application/json; charset=utf-8'});
-      return res.end(JSON.stringify({error:'Upstream unavailable',message:'The official data.gov.in service could not be reached.'}));
+      const causeCode = error?.cause?.code || error?.code || error?.name || 'unknown';
+      return res.end(JSON.stringify({error:'Upstream unavailable',message:`The official data.gov.in request failed (${causeCode}).`}));
     }
   }
 

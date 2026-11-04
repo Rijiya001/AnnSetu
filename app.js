@@ -78,7 +78,7 @@ async function loadPrices({force=false}={}) {
     const chosen=selectedRecords(); latestRecords=chosen; displayResults(chosen);
     setStatus('connected',chosen.length?tr('statusConnected'):tr('statusNoResults'));
   } catch(e) {
-    const msg=e.keyIssue?'Add your data.gov.in API key to .env, then restart the server.':tr('errorNetwork');setStatus('error',msg);
+    const msg=e.keyIssue?'Add your data.gov.in API key to .env, then restart the server.':(e.message && e.message!==`HTTP ${e.status}`?e.message:tr('errorNetwork'));setStatus('error',msg);
     $('empty-state').classList.remove('hidden');$('results').classList.add('hidden');$('empty-state').querySelector('p').textContent=msg;
     $('chart-period').textContent=e.keyIssue?'API key not configured':'Data service unavailable';
     $('chart-area').innerHTML=`<div class="chart-empty">${esc(msg)} Start the app with <code>npm start</code> and open <code>http://localhost:3000</code>.</div>`;
