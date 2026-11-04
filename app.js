@@ -89,6 +89,14 @@ function setGoogleTranslateLanguage(lang) {
   }
 }
 
+function updateLanguageLabel() {
+  const sel = $('language');
+  const label = $('lang-current');
+  if (sel && label && sel.selectedIndex >= 0) {
+    label.textContent = sel.options[sel.selectedIndex].text;
+  }
+}
+
 function formatPrice(value) {
   const n = Number(value);
   if (!Number.isFinite(n) || n <= 0) return '—';
@@ -467,8 +475,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Setup Google Translate Language Selection
   const initialLang = localStorage.getItem(langStore) || getGoogleCookieLang() || 'en';
   $('language').value = initialLang;
+  updateLanguageLabel();
 
   $('language').addEventListener('change', e => {
+    updateLanguageLabel();
     setGoogleTranslateLanguage(e.target.value);
   });
 

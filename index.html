@@ -23,8 +23,14 @@
     <nav class="top-nav" aria-label="Main navigation"><a href="#prices">Market prices</a><a
         href="#history">Price history</a><a href="#about">About the data</a>
     </nav>
-    <div class="top-actions"><label class="language-picker"><span class="sr-only">Language</span><span
-          aria-hidden="true">文</span><select id="language" aria-label="Language">
+    <div class="top-actions">
+      <div class="language-picker notranslate" title="Select language">
+        <span class="lang-icon" aria-hidden="true">文</span>
+        <span class="lang-label" id="lang-current">English</span>
+        <svg class="lang-arrow" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2.5 4.5L6 8l3.5-3.5"/>
+        </svg>
+        <select id="language" aria-label="Select language" class="lang-select">
           <option value="en">English</option>
           <option value="hi">हिन्दी (Hindi)</option>
           <option value="mr">मराठी (Marathi)</option>
@@ -37,7 +43,9 @@
           <option value="ml">മലയാളം (Malayalam)</option>
           <option value="ur">اردو (Urdu)</option>
           <option value="or">ଓଡ଼ିଆ (Odia)</option>
-        </select></label></div>
+        </select>
+      </div>
+    </div>
   </header>
 
   <main>
