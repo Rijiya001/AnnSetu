@@ -35,10 +35,10 @@ const copy = {
     thModal: 'MODAL PRICE',
     thMax: 'MAX',
     sourceLabel: 'Source: AGMARKNET · Government of India',
-    historyEyebrow: 'A LITTLE CONTEXT GOES A LONG WAY',
-    historyTitle: 'Follow the price over time',
-    historyText: 'See reported mandi prices from previous days for your selected crop.',
-    range30: 'Recent reports (15 Days)',
+    historyEyebrow: "PRICE RANGE & MARKET TREND",
+    historyTitle: "Today's price range & trends",
+    historyText: 'Official modal, minimum, and maximum prices for your selected crop.',
+    range30: 'Official reports',
     chartLabel: 'MODAL PRICE · ₹ / QUINTAL',
     chartAwait: 'Waiting for market data',
     chartEmpty: 'Price history will appear here when real reports are available.',
@@ -99,10 +99,10 @@ const copy = {
     thModal: 'औसत भाव',
     thMax: 'ज़्यादा',
     sourceLabel: 'स्रोत: AGMARKNET · भारत सरकार',
-    historyEyebrow: 'पिछले भाव भी देखें',
-    historyTitle: 'समय के साथ भाव जानें',
-    historyText: 'चुनी हुई फ़सल के लिए पिछले दिनों के दर्ज मंडी भाव देखें।',
-    range30: 'हाल की रिपोर्ट (15 दिन)',
+    historyEyebrow: 'आज का भाव दायरा और रुझान',
+    historyTitle: 'आज का मंडी भाव दायरा',
+    historyText: 'चुनी हुई फ़सल के लिए न्यूनतम, औसत और अधिकतम दर्ज सरकारी भाव देखें।',
+    range30: 'आधिकारिक रिपोर्ट',
     chartLabel: 'औसत भाव · ₹ / क्विंटल',
     chartAwait: 'मंडी डेटा की प्रतीक्षा में',
     chartEmpty: 'असली रिपोर्ट उपलब्ध होने पर भाव का इतिहास यहाँ दिखेगा।',
@@ -163,10 +163,10 @@ const copy = {
     thModal: 'मध्यम भाव',
     thMax: 'कमाल',
     sourceLabel: 'स्रोत: AGMARKNET · भारत सरकार',
-    historyEyebrow: 'मागील भावांचाही विचार करा',
-    historyTitle: 'काळानुसार भाव पाहा',
-    historyText: 'निवडलेल्या पिकाचे मागील दिवसांतील नोंदवलेले बाजारभाव पाहा.',
-    range30: 'अलीकडील अहवाल (१५ दिवस)',
+    historyEyebrow: 'आजची भाव कक्षा आणि कल',
+    historyTitle: 'आजची बाजारभाव कक्षा',
+    historyText: 'निवडलेल्या पिकासाठी किमान, मध्यम आणि कमाल नोंदवलेले सरकारी भाव पहा.',
+    range30: 'अधिकृत अहवाल',
     chartLabel: 'मध्यम भाव · ₹ / क्विंटल',
     chartAwait: 'बाजार डेटाची प्रतीक्षा',
     chartEmpty: 'खरे अहवाल उपलब्ध झाल्यावर भावांचा इतिहास येथे दिसेल.',
@@ -599,6 +599,8 @@ function displayResults(records) {
 
   $('empty-state').classList.toggle('hidden', records.length > 0);
   $('results').classList.toggle('hidden', records.length === 0);
+  const histEl = $('history');
+  if (histEl) histEl.classList.toggle('hidden', records.length === 0);
 
   if (records.length) {
     const d = records.map(r => dateValue(r.date)).filter(Boolean).sort((a, b) => b - a)[0];
@@ -685,26 +687,45 @@ function renderChart(records) {
     $('chart-area').innerHTML = `
       <div class="single-day-spread">
         <div class="spread-header">
-          <span class="spread-date">📅 ${esc(formatDate(single.day))} · ${esc(language === 'hi' ? 'आज का सरकारी मंडी भाव दायरा' : language === 'mr' ? 'आजची अधिकृत बाजारभाव कक्षा' : "Today's Mandi Price Range")}</span>
+          <span class="spread-date">📅 ${esc(formatDate(single.day))} · ${esc(language === 'hi' ? 'आज का सरकारी भाव दायरा' : language === 'mr' ? 'आजची अधिकृत भाव कक्षा' : "Today's Mandi Price Range")}</span>
           <span class="spread-mandis">${records.length} ${records.length === 1 ? tr('resultSingular') : tr('resultPlural')}</span>
         </div>
-        <div class="spread-bar-container">
-          <div class="spread-track">
-            <div class="spread-fill"></div>
-            <div class="spread-point point-min" style="left:0%;">
-              <span class="point-label">${esc(tr('thMin'))}</span>
-              <strong class="point-value">₹${esc(formatPrice(minVal))}</strong>
-            </div>
-            <div class="spread-point point-modal" style="left:${spreadPercent}%;">
-              <span class="point-label modal-tag">${esc(tr('thModal'))}</span>
-              <strong class="point-value modal-strong">₹${esc(formatPrice(modalVal))}</strong>
-            </div>
-            <div class="spread-point point-max" style="left:100%;">
-              <span class="point-label">${esc(tr('thMax'))}</span>
-              <strong class="point-value">₹${esc(formatPrice(maxVal))}</strong>
-            </div>
+
+        <div class="spread-stats-grid">
+          <div class="spread-stat-card stat-min">
+            <span class="stat-type">${esc(tr('thMin'))}</span>
+            <strong class="stat-amt">₹${esc(formatPrice(minVal))}</strong>
+            <span class="stat-sub">${language === 'hi' ? 'न्यूनतम रिपोर्ट' : language === 'mr' ? 'किमान अहवाल' : 'Lowest reported'}</span>
+          </div>
+
+          <div class="spread-stat-card stat-modal">
+            <span class="stat-badge">${language === 'hi' ? 'मुख्य मंडी भाव' : language === 'mr' ? 'मुख्य बाजारभाव' : 'Benchmark Modal Rate'}</span>
+            <span class="stat-type">${esc(tr('thModal'))}</span>
+            <strong class="stat-amt modal-highlight">₹${esc(formatPrice(modalVal))}</strong>
+            <span class="stat-sub">${language === 'hi' ? 'अधिकांश मंडियों का भाव' : language === 'mr' ? 'बहुतांश बाजारांतील भाव' : 'Most common rate'}</span>
+          </div>
+
+          <div class="spread-stat-card stat-max">
+            <span class="stat-type">${esc(tr('thMax'))}</span>
+            <strong class="stat-amt">₹${esc(formatPrice(maxVal))}</strong>
+            <span class="stat-sub">${language === 'hi' ? 'अधिकतम रिपोर्ट' : language === 'mr' ? 'कमाल अहवाल' : 'Highest reported'}</span>
           </div>
         </div>
+
+        <div class="spread-bar-wrap">
+          <div class="spread-bar-track">
+            <div class="spread-bar-fill"></div>
+            <div class="spread-modal-pin" style="left:${spreadPercent}%;">
+              <span class="pin-marker"></span>
+            </div>
+          </div>
+          <div class="spread-bar-ends">
+            <span>₹${esc(formatPrice(minVal))} (${esc(tr('thMin'))})</span>
+            <span class="spread-modal-legend">● ${esc(tr('thModal'))}: ₹${esc(formatPrice(modalVal))}</span>
+            <span>₹${esc(formatPrice(maxVal))} (${esc(tr('thMax'))})</span>
+          </div>
+        </div>
+
         <p class="spread-footer-note">
           ${language === 'hi'
         ? '✓ यह आधिकारिक AGMARKNET का 100% असली डेटा है। सरकारी मंडी रिपोर्ट रोज़ एक बार आती हैं; जैसे-जैसे अगले दिनों के असली भाव आएँगे, वे यहाँ तारीख-दर-तारीख जुड़ते जाएँगे।'
@@ -795,6 +816,8 @@ async function loadPrices({ force = false } = {}) {
     setStatus('error', msg);
     $('empty-state').classList.remove('hidden');
     $('results').classList.add('hidden');
+    const histEl = $('history');
+    if (histEl) histEl.classList.add('hidden');
     $('chart-period').textContent = tr('chartAwait');
     $('chart-area').innerHTML = `<div class="chart-empty">${esc(tr('chartEmpty'))}</div>`;
   } finally {
@@ -855,6 +878,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const cropVal = btn.dataset.crop || '';
       $('crop-search').value = cropVal ? (trCrop(cropVal) || cropVal) : '';
       loadPrices();
+
+      // Smoothly ensure the Price Range Card is in clear view right under the chips
+      const hist = $('history');
+      if (hist) {
+        const rect = hist.getBoundingClientRect();
+        if (rect.top < 0 || rect.top > window.innerHeight * 0.7) {
+          hist.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
     });
   });
 
