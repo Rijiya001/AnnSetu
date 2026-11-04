@@ -222,10 +222,16 @@ function displayResults(records) {
     </article>
   `).join('');
 
+  const hasSpecificCrop = Boolean(rawSearch);
+
   $('empty-state').classList.toggle('hidden', records.length > 0);
   $('results').classList.toggle('hidden', records.length === 0);
+  
+  // Only show the Price Range card when a specific vegetable is selected/searched
   const histEl = $('history');
-  if (histEl) histEl.classList.toggle('hidden', records.length === 0);
+  if (histEl) {
+    histEl.classList.toggle('hidden', !hasSpecificCrop || records.length === 0);
+  }
 
   if (records.length) {
     const d = records.map(r => dateValue(r.date)).filter(Boolean).sort((a, b) => b - a)[0];
@@ -233,7 +239,9 @@ function displayResults(records) {
     $('last-updated').textContent = `Data checked ${new Intl.DateTimeFormat('en-IN', { hour: 'numeric', minute: '2-digit' }).format(new Date())}`;
   }
 
-  renderChart(records);
+  if (hasSpecificCrop) {
+    renderChart(records);
+  }
 }
 
 function getRealHistoryPoints(records, selectedCrop) {
@@ -247,7 +255,7 @@ function getRealHistoryPoints(records, selectedCrop) {
     byDay.get(k).push(p);
   }
 
-  const cropKey = (selectedCrop || (records[0]?.commodity) || 'all_commodities').toLowerCase().trim();
+  const cropKey = (selectedCrop || 'all_commodities').toLowerCase().trim();
   const storageKey = 'vejbhav_real_log_v1';
   let historyStore = {};
   try {
@@ -273,8 +281,10 @@ function getRealHistoryPoints(records, selectedCrop) {
 
 function renderChart(records) {
   const selectedCrop = $('crop-search').value.trim();
-  const activeCropName = selectedCrop || (records.length ? records[0].commodity : '');
-  const kickerLabel = activeCropName ? `${activeCropName} · MODAL PRICE · ₹ / QUINTAL` : 'MODAL PRICE · ₹ / QUINTAL';
+  if (!selectedCrop) return;
+
+  const activeCropName = selectedCrop;
+  const kickerLabel = `${activeCropName} · MODAL PRICE · ₹ / QUINTAL`;
 
   const kickerEl = $('chart-kicker');
   if (kickerEl) kickerEl.textContent = kickerLabel;
@@ -492,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
       loadPrices();
 
       const hist = $('history');
-      if (hist) {
+      if (cropVal && hist) {
         const rect = hist.getBoundingClientRect();
         if (rect.top < 0 || rect.top > window.innerHeight * 0.7) {
           hist.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
