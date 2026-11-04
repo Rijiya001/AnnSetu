@@ -1,4 +1,4 @@
-const langStore = 'vejbhaav.language';
+const langStore = 'annsetu.language';
 
 // Comprehensive search mapper for common regional names & variants to AGMARKNET English commodities
 const CROP_SEARCH_MAP = {
@@ -348,10 +348,10 @@ function getRealHistoryPoints(records, selectedCrop) {
   }
 
   const cropKey = (selectedCrop || 'all_commodities').toLowerCase().trim();
-  const storageKey = 'vejbhav_real_log_v1';
+  const storageKey = 'annsetu_real_log_v1';
   let historyStore = {};
   try {
-    historyStore = JSON.parse(localStorage.getItem(storageKey) || '{}');
+    historyStore = JSON.parse(localStorage.getItem(storageKey) || localStorage.getItem('vejbhav_real_log_v1') || '{}');
   } catch (_) { }
 
   if (!historyStore[cropKey]) historyStore[cropKey] = {};
@@ -557,7 +557,7 @@ function applyFilters() {
 
 document.addEventListener('DOMContentLoaded', () => {
   // Setup Google Translate Language Selection
-  const initialLang = localStorage.getItem(langStore) || getGoogleCookieLang() || 'en';
+  const initialLang = localStorage.getItem(langStore) || localStorage.getItem('vejbhaav.language') || getGoogleCookieLang() || 'en';
   $('language').value = initialLang;
   updateLanguageLabel();
 

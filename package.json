@@ -1,8 +1,8 @@
 {
-  "name": "vejbhaav",
+  "name": "ann-setu",
   "version": "1.0.0",
   "private": true,
-  "description": "Mobile-first Indian mandi price viewer powered by AGMARKNET",
+  "description": "Ann Setu — Mobile-first Indian mandi price viewer powered by AGMARKNET",
   "scripts": {
     "start": "node --env-file=.env server.js"
   },

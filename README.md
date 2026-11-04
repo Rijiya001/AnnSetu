@@ -1,10 +1,10 @@
-# VejBhav
+# Ann Setu
 
 A mobile-first Indian vegetable & fruit mandi price viewer powered by official Government of India AGMARKNET daily price reports through the free `data.gov.in` API.
 
 - **Zero setup for visitors:** No API key prompts or developer settings on the website.
 - **100% authentic government data:** True modal, minimum, and maximum prices directly from AGMARKNET.
-- **Multilingual:** Full support for English, Hindi (हिन्दी), and Marathi (मराठी) including crop names, varieties, and states.
+- **Multilingual:** Full support across 12 Indian languages powered by Google Translate, plus regional search mapping for all crops.
 - **Vercel-ready:** Deploy with one click to Vercel via Serverless Functions.
 
 ---
@@ -13,13 +13,13 @@ A mobile-first Indian vegetable & fruit mandi price viewer powered by official G
 
 1. Push this repository to GitHub.
 2. Go to [vercel.com](https://vercel.com) and click **"Add New Project"**.
-3. Select your **VejBhav** repository.
+3. Select your **Ann Setu** repository.
 4. In the **Environment Variables** section, add:
    - **Key:** `DATA_GOV_IN_API_KEY`
    - **Value:** `your_data_gov_in_api_key`
 5. Click **Deploy**.
 
-That's it! Your site will be live on your Vercel URL (e.g., `https://vejbhav.vercel.app`) and serve official prices worldwide without asking visitors for any API key.
+That's it! Your site will be live on your Vercel URL (e.g., `https://ann-setu.vercel.app`) and serve official prices worldwide without asking visitors for any API key.
 
 ---
 

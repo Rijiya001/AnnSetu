@@ -11,7 +11,9 @@ const MIME = {
   '.css': 'text/css; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
-  '.svg': 'image/svg+xml'
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon',
+  '.png': 'image/png'
 };
 
 async function route(req, res) {
@@ -115,10 +117,10 @@ function startServer(port, maxAttempts = 10) {
   server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
       if (maxAttempts > 0) {
-        console.warn(`[VejBhav] Port ${port} is in use. Trying port ${port + 1}...`);
+        console.warn(`[Ann Setu] Port ${port} is in use. Trying port ${port + 1}...`);
         startServer(port + 1, maxAttempts - 1);
       } else {
-        console.error(`\n[VejBhav] Error: Ports ${PORT} through ${port} are all in use.`);
+        console.error(`\n[Ann Setu] Error: Ports ${PORT} through ${port} are all in use.`);
         console.error('To free port 3000 on Windows PowerShell:');
         console.error('  Stop-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess -Force');
         console.error('Or in Windows Command Prompt:');
@@ -127,14 +129,14 @@ function startServer(port, maxAttempts = 10) {
         process.exit(1);
       }
     } else {
-      console.error('[VejBhav] Server error:', err);
+      console.error('[Ann Setu] Server error:', err);
       process.exit(1);
     }
   });
 
   server.listen(port, () => {
     console.log(`\n======================================================`);
-    console.log(`  🌱 VejBhav Mandi Prices Server is running!`);
+    console.log(`  🌱 Ann Setu Mandi Prices Server is running!`);
     console.log(`  Local URL: http://localhost:${port}`);
     console.log(`  Source: Official AGMARKNET API (data.gov.in)`);
     console.log(`======================================================\n`);
