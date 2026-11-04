@@ -1,4 +1,5 @@
 const langStore = 'vejbhaav.language';
+const KEY_STORE = 'vejbhaav.dataGovKey';
 
 const copy = {
   en: {
@@ -491,6 +492,11 @@ function applyLanguage() {
     }
   });
 
+  const toggleBtn = $('toggle-key');
+  if (toggleBtn) {
+    toggleBtn.textContent = tr($('api-key')?.type === 'password' ? 'show' : 'hide');
+  }
+
   // Re-populate state and district dropdowns with translated state names
   if (allRecords.length) {
     populateFilters(allRecords);
@@ -553,7 +559,11 @@ async function getRecords(filters = {}) {
   for (const [field, value] of Object.entries(filters)) {
     if (value) url.searchParams.set(field.toLowerCase(), value);
   }
-  const res = await fetch(url, { headers: { Accept: 'application/json' } });
+  const headers = { Accept: 'application/json' };
+  const localKey = localStorage.getItem(KEY_STORE);
+  if (localKey) headers['x-api-key'] = localKey;
+
+  const res = await fetch(url, { headers });
   const data = await res.json().catch(() => ({}));
   if (!res.ok || data.status === 'error') {
     const e = new Error(data.message || `HTTP ${res.status}`);
@@ -868,8 +878,42 @@ function applyFilters() {
   setStatus('connected', filtered.length ? tr('statusConnected') : tr('statusNoResults'));
 }
 
+async function checkKeyStatus() {
+  const statusBox = $('key-status-box');
+  const statusMsg = $('key-status-msg');
+  if (!statusBox || !statusMsg) return;
+
+  const localKey = localStorage.getItem(KEY_STORE) || '';
+  try {
+    const res = await fetch('/api/status');
+    const data = await res.json();
+    if (data.hasKey || localKey) {
+      const preview = data.keyPreview || (localKey ? `${localKey.slice(0, 8)}...${localKey.slice(-4)}` : '');
+      statusBox.className = 'key-status-box active';
+      statusMsg.textContent = `${language === 'hi' ? '✓ सक्रिय API कुंजी जुड़ी हुई है' : language === 'mr' ? '✓ सक्रिय API कळ जोडलेली आहे' : '✓ Active API key connected'} (${preview})`;
+      statusBox.classList.remove('hidden');
+      if (localKey && !$('api-key').value) $('api-key').value = localKey;
+    } else {
+      statusBox.className = 'key-status-box missing';
+      statusMsg.textContent = language === 'hi' ? '⚠️ कोई API कुंजी नहीं जुड़ी है। कृपया नीचे अपनी मुफ़्त कुंजी दर्ज करें।' : language === 'mr' ? '⚠️ कोणतीही API कळ जोडलेली नाही. कृपया खाली आपली विनामूल्य कळ भरा.' : '⚠️ No API key connected. Please enter your free key below.';
+      statusBox.classList.remove('hidden');
+    }
+  } catch (_) {
+    if (localKey) {
+      statusBox.className = 'key-status-box active';
+      statusMsg.textContent = `✓ Key saved on device (${localKey.slice(0, 8)}...${localKey.slice(-4)})`;
+      statusBox.classList.remove('hidden');
+      $('api-key').value = localKey;
+    }
+  }
+}
+
 function openSettings() {
   const d = $('settings-dialog');
+  $('key-error').classList.add('hidden');
+  const localKey = localStorage.getItem(KEY_STORE) || '';
+  if (localKey) $('api-key').value = localKey;
+  checkKeyStatus();
   if (!d.open) d.showModal();
 }
 
@@ -888,6 +932,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
   $('settings-open').addEventListener('click', openSettings);
   $('empty-settings').addEventListener('click', openSettings);
+
+  $('toggle-key').addEventListener('click', () => {
+    const input = $('api-key');
+    input.type = input.type === 'password' ? 'text' : 'password';
+    $('toggle-key').textContent = tr(input.type === 'password' ? 'show' : 'hide');
+  });
+
+  $('save-key').addEventListener('click', async () => {
+    const key = $('api-key').value.trim();
+    if (!key) {
+      $('key-error').textContent = tr('keyRequired');
+      $('key-error').classList.remove('hidden');
+      return;
+    }
+    $('key-error').classList.add('hidden');
+    $('save-key').disabled = true;
+    $('save-key').textContent = tr('loading');
+
+    try {
+      // Save to server .env & memory
+      await fetch('/api/save-key', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key })
+      }).catch(() => {});
+
+      // Save to browser localStorage
+      localStorage.setItem(KEY_STORE, key);
+      $('settings-dialog').close();
+      showToast(tr('toastSaved'));
+      loadPrices({ force: true });
+    } finally {
+      $('save-key').disabled = false;
+      $('save-key').textContent = tr('saveConnect');
+    }
+  });
+
+  $('clear-key').addEventListener('click', () => {
+    localStorage.removeItem(KEY_STORE);
+    $('api-key').value = '';
+    showToast(tr('toastCleared'));
+    checkKeyStatus();
+  });
 
   $('refresh').addEventListener('click', () => loadPrices({ force: true }));
   $('search-button').addEventListener('click', () => loadPrices());
