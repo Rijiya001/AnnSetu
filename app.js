@@ -456,7 +456,13 @@ function applyLanguage() {
 
 function formatPrice(value) {
   const n = Number(value);
-  return Number.isFinite(n) ? new Intl.NumberFormat(language === 'en' ? 'en-IN' : language === 'hi' ? 'hi-IN' : 'mr-IN', { maximumFractionDigits: 0 }).format(n) : '—';
+  if (!Number.isFinite(n) || n <= 0) return '—';
+  return new Intl.NumberFormat(language === 'en' ? 'en-IN' : language === 'hi' ? 'hi-IN' : 'mr-IN', { maximumFractionDigits: 0 }).format(n);
+}
+
+function formatPriceDisplay(value) {
+  const f = formatPrice(value);
+  return f === '—' ? '—' : `₹${f}`;
 }
 
 function dateValue(raw) {
@@ -576,9 +582,9 @@ function displayResults(records) {
       <td>${formatCrop(r.commodity, r.variety)}</td>
       <td>${formatLocation(r.market, r.district, r.state)}</td>
       <td>${esc(formatDate(r.date))}</td>
-      <td class="price">₹${esc(formatPrice(r.min))}</td>
-      <td class="price modal-price">₹${esc(formatPrice(r.modal))}</td>
-      <td class="price">₹${esc(formatPrice(r.max))}</td>
+      <td class="price">${esc(formatPriceDisplay(r.min))}</td>
+      <td class="price modal-price">${esc(formatPriceDisplay(r.modal))}</td>
+      <td class="price">${esc(formatPriceDisplay(r.max))}</td>
     </tr>
   `).join('');
 
@@ -590,9 +596,9 @@ function displayResults(records) {
       </div>
       <div class="price-card-location">${formatLocation(r.market, r.district, r.state)}</div>
       <div class="price-card-values">
-        <div><span>${esc(tr('thMin'))}</span><strong>₹${esc(formatPrice(r.min))}</strong></div>
-        <div class="value-modal"><span>${esc(tr('thModal'))}</span><strong>₹${esc(formatPrice(r.modal))}</strong></div>
-        <div><span>${esc(tr('thMax'))}</span><strong>₹${esc(formatPrice(r.max))}</strong></div>
+        <div><span>${esc(tr('thMin'))}</span><strong>${esc(formatPriceDisplay(r.min))}</strong></div>
+        <div class="value-modal"><span>${esc(tr('thModal'))}</span><strong>${esc(formatPriceDisplay(r.modal))}</strong></div>
+        <div><span>${esc(tr('thMax'))}</span><strong>${esc(formatPriceDisplay(r.max))}</strong></div>
       </div>
     </article>
   `).join('');
@@ -617,7 +623,7 @@ function getRealHistoryPoints(records, selectedCrop) {
   for (const r of records) {
     const d = dateValue(r.date);
     const p = Number(r.modal);
-    if (!d || !Number.isFinite(p) || p <= 0) continue;
+    if (!d || !Number.isFinite(p) || p < 10) continue;
     const k = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     if (!byDay.has(k)) byDay.set(k, []);
     byDay.get(k).push(p);
@@ -671,13 +677,19 @@ function renderChart(records) {
   // If only 1 single arrival date is available, display Today's Authentic Price Spread
   if (points.length <= 1) {
     const single = points[0] || { day: records[0]?.date, value: Number(records[0]?.modal) };
-    const validModals = records.map(r => Number(r.modal)).filter(p => Number.isFinite(p) && p > 0);
-    const validMins = records.map(r => Number(r.min)).filter(p => Number.isFinite(p) && p > 0);
-    const validMaxs = records.map(r => Number(r.max)).filter(p => Number.isFinite(p) && p > 0);
+    // Filter realistic commercial mandi rates (at least ₹10/quintal)
+    // to discard clerk placeholder 0s, empty fields, or nominal fractions
+    const validModals = records.map(r => Number(r.modal)).filter(p => Number.isFinite(p) && p >= 10);
+    const validMins = records.map(r => Number(r.min)).filter(p => Number.isFinite(p) && p >= 10);
+    const validMaxs = records.map(r => Number(r.max)).filter(p => Number.isFinite(p) && p >= 10);
 
     const modalVal = validModals.length ? validModals.sort((a, b) => a - b)[Math.floor(validModals.length / 2)] : (single.value || 0);
-    const minVal = validMins.length ? Math.min(...validMins) : modalVal;
-    const maxVal = validMaxs.length ? Math.max(...validMaxs) : modalVal;
+    const rawMin = validMins.length ? Math.min(...validMins) : modalVal;
+    const rawMax = validMaxs.length ? Math.max(...validMaxs) : modalVal;
+
+    // Ensure logical bounds: min <= modal <= max
+    const minVal = Math.min(rawMin, modalVal || rawMin);
+    const maxVal = Math.max(rawMax, modalVal || rawMax);
 
     $('chart-latest').textContent = modalVal ? `₹${formatPrice(modalVal)}` : '—';
     $('chart-period').textContent = `1 ${tr('chartOneDay')} (${formatDate(single.day)})`;
