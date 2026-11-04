@@ -663,8 +663,8 @@ function displayResults(records) {
   renderChart(records);
 }
 
-function getHistoryPoints(records, selectedCrop) {
-  // 1. Check if multiple distinct arrival dates exist directly in the API records
+function getRealHistoryPoints(records, selectedCrop) {
+  // 1. Group records from current API response by arrival date
   const byDay = new Map();
   for (const r of records) {
     const d = dateValue(r.date);
@@ -675,59 +675,31 @@ function getHistoryPoints(records, selectedCrop) {
     byDay.get(k).push(p);
   }
 
-  if (byDay.size >= 2) {
-    return [...byDay.entries()]
-      .map(([day, prices]) => ({
-        day,
-        value: prices.sort((a, b) => a - b)[Math.floor(prices.length / 2)]
-      }))
-      .sort((a, b) => a.day.localeCompare(b.day));
-  }
-
-  // 2. Build or retrieve 15-day price history anchored on today's actual government price
-  const validPrices = records.map(r => Number(r.modal)).filter(p => Number.isFinite(p) && p > 0);
-  const todayMedian = validPrices.length ? validPrices.sort((a, b) => a - b)[Math.floor(validPrices.length / 2)] : 0;
-  if (!todayMedian) return [];
-
+  // 2. Load accumulated real daily records from localStorage
   const cropKey = (selectedCrop || (records[0]?.commodity) || 'all_commodities').toLowerCase().trim();
-  const storageKey = 'vejbhav_history_v2';
+  const storageKey = 'vejbhav_real_log_v1';
   let historyStore = {};
   try {
     historyStore = JSON.parse(localStorage.getItem(storageKey) || '{}');
   } catch (_) {}
 
-  const now = new Date();
-  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  if (!historyStore[cropKey]) historyStore[cropKey] = {};
 
-  if (!historyStore[cropKey] || historyStore[cropKey].lastDate !== todayStr) {
-    let hash = 0;
-    for (let i = 0; i < cropKey.length; i++) hash = (hash * 33 + cropKey.charCodeAt(i)) & 0xfffff;
-
-    const points = [];
-    const totalDays = 14;
-    for (let i = totalDays; i >= 1; i--) {
-      const past = new Date(now.getTime() - i * 86400000);
-      const dayStr = `${past.getFullYear()}-${String(past.getMonth() + 1).padStart(2, '0')}-${String(past.getDate()).padStart(2, '0')}`;
-      const factor = Math.sin((totalDays - i + hash) * 0.48) * 0.045 + Math.cos((totalDays - i) * 0.35) * 0.025;
-      const val = Math.round(todayMedian * (1 + factor));
-      points.push({ day: dayStr, value: Math.max(val, 50) });
-    }
-    // Anchor the final point on today's official government reported price
-    points.push({ day: todayStr, value: todayMedian });
-
-    historyStore[cropKey] = { lastDate: todayStr, points };
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(historyStore));
-    } catch (_) {}
-  } else {
-    // Keep today's point aligned with live median
-    const pts = historyStore[cropKey].points;
-    if (pts && pts.length > 0) {
-      pts[pts.length - 1].value = todayMedian;
-    }
+  // Store only 100% genuine daily medians from the API
+  for (const [day, prices] of byDay.entries()) {
+    const med = prices.sort((a, b) => a - b)[Math.floor(prices.length / 2)];
+    historyStore[cropKey][day] = med;
   }
 
-  return historyStore[cropKey].points;
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(historyStore));
+  } catch (_) {}
+
+  // Return all authentic records sorted by date
+  return Object.entries(historyStore[cropKey])
+    .map(([day, value]) => ({ day, value: Number(value) }))
+    .filter(p => Number.isFinite(p.value) && p.value > 0)
+    .sort((a, b) => a.day.localeCompare(b.day));
 }
 
 function renderChart(records) {
@@ -739,16 +711,69 @@ function renderChart(records) {
   const kickerEl = $('chart-kicker');
   if (kickerEl) kickerEl.textContent = kickerLabel;
 
-  const points = getHistoryPoints(records, activeCropName);
-
-  $('chart-area').innerHTML = '';
-  $('chart-latest').textContent = points.length ? `₹${formatPrice(points.at(-1).value)}` : '—';
-  $('chart-period').textContent = points.length ? `${points.length} ${points.length === 1 ? tr('chartOneDay') : tr('chartDays')}` : tr('chartAwait');
-
-  if (!points.length) {
+  if (!records.length) {
     $('chart-area').innerHTML = `<div class="chart-empty">${esc(tr('chartEmpty'))}</div>`;
+    $('chart-latest').textContent = '—';
+    $('chart-period').textContent = tr('chartAwait');
     return;
   }
+
+  const points = getRealHistoryPoints(records, activeCropName);
+
+  // If only 1 single arrival date is available, display Today's Authentic Price Spread
+  if (points.length <= 1) {
+    const single = points[0] || { day: records[0]?.date, value: Number(records[0]?.modal) };
+    const validModals = records.map(r => Number(r.modal)).filter(p => Number.isFinite(p) && p > 0);
+    const validMins = records.map(r => Number(r.min)).filter(p => Number.isFinite(p) && p > 0);
+    const validMaxs = records.map(r => Number(r.max)).filter(p => Number.isFinite(p) && p > 0);
+
+    const modalVal = validModals.length ? validModals.sort((a, b) => a - b)[Math.floor(validModals.length / 2)] : (single.value || 0);
+    const minVal = validMins.length ? Math.min(...validMins) : modalVal;
+    const maxVal = validMaxs.length ? Math.max(...validMaxs) : modalVal;
+
+    $('chart-latest').textContent = modalVal ? `₹${formatPrice(modalVal)}` : '—';
+    $('chart-period').textContent = `1 ${tr('chartOneDay')} (${formatDate(single.day)})`;
+
+    const spreadPercent = maxVal > minVal ? Math.min(Math.max(((modalVal - minVal) / (maxVal - minVal)) * 100, 15), 85) : 50;
+
+    $('chart-area').innerHTML = `
+      <div class="single-day-spread">
+        <div class="spread-header">
+          <span class="spread-date">📅 ${esc(formatDate(single.day))} · ${esc(language === 'hi' ? 'आज का सरकारी मंडी भाव दायरा' : language === 'mr' ? 'आजची अधिकृत बाजारभाव कक्षा' : "Today's Mandi Price Range")}</span>
+          <span class="spread-mandis">${records.length} ${records.length === 1 ? tr('resultSingular') : tr('resultPlural')}</span>
+        </div>
+        <div class="spread-bar-container">
+          <div class="spread-track">
+            <div class="spread-fill"></div>
+            <div class="spread-point point-min" style="left:0%;">
+              <span class="point-label">${esc(tr('thMin'))}</span>
+              <strong class="point-value">₹${esc(formatPrice(minVal))}</strong>
+            </div>
+            <div class="spread-point point-modal" style="left:${spreadPercent}%;">
+              <span class="point-label modal-tag">${esc(tr('thModal'))}</span>
+              <strong class="point-value modal-strong">₹${esc(formatPrice(modalVal))}</strong>
+            </div>
+            <div class="spread-point point-max" style="left:100%;">
+              <span class="point-label">${esc(tr('thMax'))}</span>
+              <strong class="point-value">₹${esc(formatPrice(maxVal))}</strong>
+            </div>
+          </div>
+        </div>
+        <p class="spread-footer-note">
+          ${language === 'hi'
+            ? '✓ यह आधिकारिक AGMARKNET का 100% असली डेटा है। सरकारी मंडी रिपोर्ट रोज़ एक बार आती हैं; जैसे-जैसे अगले दिनों के असली भाव आएँगे, वे यहाँ तारीख-दर-तारीख जुड़ते जाएँगे।'
+            : language === 'mr'
+            ? '✓ हा AGMARKNET चा १००% खरा अधिकृत डेटा आहे. सरकारी बाजार अहवाल रोज एकदा प्रसिद्ध होतात; पुढील दिवसांचे खरे भाव येताच ते येथे नोंदवले जातील.'
+            : '✓ 100% authentic AGMARKNET government report. Mandi reports are published once daily; historical trend lines connect real daily reports as they accumulate.'}
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  // If 2 or more genuine daily dates exist, plot the authentic trend line
+  $('chart-latest').textContent = `₹${formatPrice(points.at(-1).value)}`;
+  $('chart-period').textContent = `${points.length} ${tr('chartDays')}`;
 
   const width = 900;
   const height = 185;
@@ -769,8 +794,10 @@ function renderChart(records) {
   const line = xy.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
   const area = `${line} L${xy.at(-1).x},${height} L${xy[0].x},${height} Z`;
 
-  // Pick up to 5 tick labels along X axis
-  const tickIndices = [0, Math.floor(points.length * 0.33), Math.floor(points.length * 0.66), points.length - 1];
+  const tickIndices = points.length <= 4 
+    ? points.map((_, i) => i) 
+    : [0, Math.floor(points.length * 0.33), Math.floor(points.length * 0.66), points.length - 1];
+
   const tickLabels = tickIndices.map((idx, i) => {
     const p = xy[idx];
     const align = i === 0 ? 'start' : i === tickIndices.length - 1 ? 'end' : 'middle';
