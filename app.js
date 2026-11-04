@@ -289,16 +289,36 @@ function setStatus(kind, text) {
 }
 
 async function getRecords(filters = {}) {
-  const url = new URL('/api/prices', location.origin);
-  for (const [field, value] of Object.entries(filters)) {
-    if (value) url.searchParams.set(field.toLowerCase(), value);
+  const buildUrl = (base) => {
+    const u = new URL(base, location.origin);
+    for (const [field, value] of Object.entries(filters)) {
+      if (value) u.searchParams.set(field.toLowerCase(), value);
+    }
+    return u;
+  };
+
+  let res;
+  try {
+    res = await fetch(buildUrl('/api/prices'), { headers: { Accept: 'application/json' } });
+    if (!res.ok && (res.status === 404 || res.status === 502)) {
+      // Fallback directly to Netlify serverless function path
+      res = await fetch(buildUrl('/.netlify/functions/prices'), { headers: { Accept: 'application/json' } });
+    }
+  } catch (_) {
+    // If /api/prices caused network error, retry via direct function path
+    res = await fetch(buildUrl('/.netlify/functions/prices'), { headers: { Accept: 'application/json' } }).catch(() => null);
   }
-  const res = await fetch(url, { headers: { Accept: 'application/json' } });
+
+  if (!res || !res.ok) {
+    throw new Error(res ? `HTTP ${res.status}` : 'Network error');
+  }
   const data = await res.json().catch(() => ({}));
-  if (!res.ok || data.status === 'error') {
-    throw new Error(data.message || `HTTP ${res.status}`);
+  if (data.status === 'error') {
+    throw new Error(data.message || 'API error');
   }
-  if (!Array.isArray(data.records)) throw new Error(data.message || 'No records returned from data.gov.in');
+  if (!Array.isArray(data.records)) {
+    throw new Error(data.message || 'No records returned from data.gov.in');
+  }
   return data.records.map(normalise);
 }
 

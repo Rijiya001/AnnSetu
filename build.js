@@ -9,7 +9,8 @@ const STATIC_FILES = [
   'styles.css',
   'app.js',
   'favicon.svg',
-  'favicon.ico'
+  'favicon.ico',
+  '_redirects'
 ];
 
 if (!fs.existsSync(DIST)) {
@@ -26,4 +27,3 @@ for (const file of STATIC_FILES) {
 }
 
 console.log('[build] Site build complete (dist directory ready).');
-
