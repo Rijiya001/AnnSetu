@@ -24,12 +24,24 @@ function normalise(r) { return {state:r.state || '', district:r.district || '', 
 function compareArrivalDateNewest(a,b) { return (dateValue(b.date)?.getTime() || 0) - (dateValue(a.date)?.getTime() || 0); }
 function setStatus(kind, text) { $('status-text').textContent = text; $('status-dot').className = `status-dot ${kind || ''}`; }
 function showToast(text) { const t=$('toast'); t.textContent=text; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600); }
+const COMMON_CROPS = [
+  'Potato', 'Tomato', 'Onion', 'Green Chilli', 'Brinjal', 'Cabbage',
+  'Cauliflower', 'Carrot', 'Garlic', 'Ginger(Green)', 'Bottle gourd',
+  'Bitter gourd', 'Cucumber(Kheera)', 'Bhindi(Ladies Finger)', 'Capsicum',
+  'Spinach', 'Pumpkin', 'Radish', 'Peas Wet', 'Apple', 'Banana', 'Mango',
+  'Orange', 'Lemon', 'Pomegranate', 'Papaya', 'Water Melon'
+];
+
 async function getRecords(filters={}) {
   const url=new URL('/api/prices',location.origin);
   for(const [field,value] of Object.entries(filters))if(value)url.searchParams.set(field.toLowerCase(),value);
   const res = await fetch(url, {headers:{Accept:'application/json'}});
   const data = await res.json().catch(()=>({}));
-  if (!res.ok || data.status === 'error') { const e=new Error(data.message || `HTTP ${res.status}`); e.keyIssue=res.status===503; throw e; }
+  if (!res.ok || data.status === 'error') {
+    const e = new Error(data.message || `HTTP ${res.status}`);
+    e.keyIssue = res.status === 503 || res.status === 401 || res.status === 403 || data.error === 'API key missing' || (data.message && data.message.toLowerCase().includes('key'));
+    throw e;
+  }
   if (!Array.isArray(data.records)) throw new Error(data.message || 'No records returned');
   return data.records.map(normalise);
 }
@@ -42,7 +54,8 @@ function populateFilters(records) {
   updateSelect($('state-filter'), [...new Set(records.map(r=>r.state).filter(Boolean))].sort((a,b)=>a.localeCompare(b)), tr('allStates'));
   updateSelect($('district-filter'), [...new Set(records.filter(r=>!$('state-filter').value||r.state===$('state-filter').value).map(r=>r.district).filter(Boolean))].sort((a,b)=>a.localeCompare(b)), tr('anyDistrict'));
   $('district-filter').disabled=!$('state-filter').value;
-  $('crops').innerHTML=[...new Set(records.map(r=>r.commodity).filter(Boolean))].sort((a,b)=>a.localeCompare(b)).map(v=>`<option value="${esc(v)}">`).join('');
+  const combined = [...new Set([...COMMON_CROPS, ...records.map(r=>r.commodity).filter(Boolean)])].sort((a,b)=>a.localeCompare(b));
+  $('crops').innerHTML=combined.map(v=>`<option value="${esc(v)}">`).join('');
 }
 function displayResults(records) {
   const tbody=$('price-rows'), mobile=$('mobile-cards');
@@ -74,12 +87,17 @@ async function loadPrices({force=false}={}) {
     const crop=$('crop-search').value.trim();
     // Load the official daily dataset with an optional state filter. The UI only derives
     // aggregates from returned records; it does not manufacture prices or history.
-    allRecords=(await getRecords({...(state?{State:state}:{}),...(crop?{Commodity:crop}:{})})).sort(compareArrivalDateNewest);
+    let records = await getRecords({...(state?{state}:{}),...(crop?{commodity:crop}:{})});
+    if (!records.length && crop) {
+      // If filtered query had 0 records, fallback to state/all records so the user isn't stuck
+      records = await getRecords({...(state?{state}:{})});
+    }
+    allRecords = records.sort(compareArrivalDateNewest);
     populateFilters(allRecords);
     const chosen=selectedRecords(); latestRecords=chosen; displayResults(chosen);
     setStatus('connected',chosen.length?tr('statusConnected'):tr('statusNoResults'));
   } catch(e) {
-    const msg=e.keyIssue?'Add your data.gov.in API key to .env, then restart the server.':(e.message && e.message!==`HTTP ${e.status}`?e.message:tr('errorNetwork'));setStatus('error',msg);
+    const msg=e.keyIssue?'Invalid or missing API key. Add your data.gov.in key to .env and restart.':(e.message && e.message!==`HTTP ${e.status}`?e.message:tr('errorNetwork'));setStatus('error',msg);
     $('empty-state').classList.remove('hidden');$('results').classList.add('hidden');$('empty-state').querySelector('p').textContent=msg;
     $('chart-period').textContent=e.keyIssue?'API key not configured':'Data service unavailable';
     $('chart-area').innerHTML=`<div class="chart-empty">${esc(msg)} Start the app with <code>npm start</code> and open <code>http://localhost:3000</code>.</div>`;
@@ -97,6 +115,26 @@ document.addEventListener('DOMContentLoaded',()=>{
   $('settings-open').addEventListener('click',openSettings);$('empty-settings').addEventListener('click',openSettings);
   $('refresh').addEventListener('click',()=>loadPrices({force:true}));$('search-button').addEventListener('click',()=>loadPrices());
   $('crop-search').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();loadPrices();}});
+  
+  // Instant real-time filtering as user types
+  $('crop-search').addEventListener('input',()=>{
+    const val = $('crop-search').value.trim().toLowerCase();
+    document.querySelectorAll('.chip').forEach(c => {
+      c.classList.toggle('active', (c.dataset.crop || '').toLowerCase() === val);
+    });
+    if (allRecords.length) applyFilters();
+  });
+
+  // Vegetable quick tags
+  document.querySelectorAll('.chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      $('crop-search').value = btn.dataset.crop || '';
+      loadPrices();
+    });
+  });
+
   $('state-filter').addEventListener('change',()=>{if(allRecords.length)loadPrices();});
   $('district-filter').addEventListener('change',applyFilters);
   loadPrices();

@@ -28,6 +28,17 @@
       <section class="workspace" id="prices">
         <div class="section-heading"><div><div class="eyebrow muted" data-i18n="sectionEyebrow">YOUR LOCAL MARKET, AT A GLANCE</div><h2 data-i18n="sectionTitle">Today's mandi prices</h2></div><button class="refresh-button" id="refresh"><span class="refresh-icon">↻</span><span data-i18n="refresh">Refresh data</span></button></div>
         <div class="filters"><label class="filter-field crop-field"><span data-i18n="cropLabel">WHAT ARE YOU SELLING?</span><span class="input-wrap"><span class="search-icon">⌕</span><input id="crop-search" list="crops" placeholder="Search a fruit or vegetable" data-i18n-placeholder="cropPlaceholder" autocomplete="off"/><datalist id="crops"></datalist></span></label><label class="filter-field"><span data-i18n="stateLabel">STATE</span><select id="state-filter"><option value="" data-i18n="allStates">All states</option></select></label><label class="filter-field"><span data-i18n="districtLabel">DISTRICT</span><select id="district-filter" disabled><option value="" data-i18n="anyDistrict">Any district</option></select></label><button class="search-button" id="search-button" data-i18n="searchButton">See prices <span>→</span></button></div>
+        <div class="crop-chips" id="crop-chips" aria-label="Quick vegetable filters">
+          <button type="button" class="chip active" data-crop="">All Vegetables</button>
+          <button type="button" class="chip" data-crop="Potato">🥔 Potato</button>
+          <button type="button" class="chip" data-crop="Tomato">🍅 Tomato</button>
+          <button type="button" class="chip" data-crop="Onion">🧅 Onion</button>
+          <button type="button" class="chip" data-crop="Green Chilli">🌶️ Chilli</button>
+          <button type="button" class="chip" data-crop="Brinjal">🍆 Brinjal</button>
+          <button type="button" class="chip" data-crop="Garlic">🧄 Garlic</button>
+          <button type="button" class="chip" data-crop="Cabbage">🥬 Cabbage</button>
+          <button type="button" class="chip" data-crop="Cauliflower">🥦 Cauliflower</button>
+        </div>
         <div class="notice-row"><div class="source-status"><span class="status-dot" id="status-dot"></span><span id="status-text" data-i18n="statusNeedKey">Connect a free data.gov.in key to load official prices</span></div><span class="updated-label" id="last-updated"></span></div>
         <div class="empty-state" id="empty-state"><div class="empty-icon">⌕</div><h3 data-i18n="emptyTitle">Prices, without the guesswork</h3><p data-i18n="emptyText">Add your free data.gov.in API key in settings to see real mandi reports. No sample prices, ever.</p><button class="outline-button" id="empty-settings" data-i18n="connectButton">Connect data source <span>→</span></button></div>
         <div class="results hidden" id="results"><div class="results-top"><div><h3 id="results-title">Market reports</h3><span id="result-count"></span></div><div class="unit-note" data-i18n="unitNote">Prices shown per quintal (100 kg)</div></div><div class="table-scroll"><table><thead><tr><th data-i18n="thMarket">MARKET</th><th data-i18n="thDistrict">DISTRICT · STATE</th><th data-i18n="thDate">ARRIVAL DATE</th><th data-i18n="thMin">MIN</th><th data-i18n="thModal">MODAL PRICE</th><th data-i18n="thMax">MAX</th></tr></thead><tbody id="price-rows"></tbody></table></div><div class="mobile-cards" id="mobile-cards"></div><div class="table-footer"><span data-i18n="sourceLabel">Source: AGMARKNET · Government of India</span><span id="data-freshness"></span></div></div>
