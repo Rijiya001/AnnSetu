@@ -18,29 +18,37 @@
 
 <body>
   <header class="topbar">
-    <a class="brand" href="#" aria-label="VejBhav home"><span class="brand-mark">v</span><span>vej<span
+    <a class="brand notranslate" href="#" aria-label="VejBhav home"><span class="brand-mark">v</span><span>vej<span
           class="brand-light">bhav</span></span></a>
-    <nav class="top-nav" aria-label="Main navigation"><a href="#prices" data-i18n="navPrices">Market prices</a><a
-        href="#history" data-i18n="navHistory">Price history</a><a href="#about" data-i18n="navAbout">About the data</a>
+    <nav class="top-nav" aria-label="Main navigation"><a href="#prices">Market prices</a><a
+        href="#history">Price history</a><a href="#about">About the data</a>
     </nav>
-    <div class="top-actions"><label class="language-picker"><span class="sr-only"
-          data-i18n="language">Language</span><span aria-hidden="true">文</span><select id="language"
-          aria-label="Language">
+    <div class="top-actions"><label class="language-picker"><span class="sr-only">Language</span><span
+          aria-hidden="true">文</span><select id="language" aria-label="Language">
           <option value="en">English</option>
-          <option value="hi">हिन्दी</option>
-          <option value="mr">मराठी</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="mr">मराठी (Marathi)</option>
+          <option value="gu">ગુજરાતી (Gujarati)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+          <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="kn">ಕನ್ನಡ (Kannada)</option>
+          <option value="ml">മലയാളം (Malayalam)</option>
+          <option value="ur">اردو (Urdu)</option>
+          <option value="or">ଓଡ଼ିଆ (Odia)</option>
         </select></label></div>
   </header>
 
   <main>
     <section class="hero">
       <div class="hero-copy">
-        <div class="eyebrow"><span class="live-dot"></span><span data-i18n="heroEyebrow">INDIA'S MANDI PRICES · STRAIGHT
+        <div class="eyebrow"><span class="live-dot"></span><span>INDIA'S MANDI PRICES · STRAIGHT
             FROM THE SOURCE</span></div>
-        <h1 data-i18n="heroTitle">Know your market.<br /><em>Choose your moment.</em></h1>
-        <p data-i18n="heroText">Compare today's reported prices and see how they have moved. Clear information for
+        <h1>Know your market.<br /><em>Choose your moment.</em></h1>
+        <p>Compare today's reported prices and see how they have moved. Clear information for
           better selling and fairer buying.</p>
-        <div class="hero-note"><span class="note-icon">↗</span><span data-i18n="heroNote">Official market reports, with
+        <div class="hero-note"><span class="note-icon">↗</span><span>Official market reports, with
             the date and source always in view.</span></div>
       </div>
       <div class="hero-art" aria-hidden="true">
@@ -58,66 +66,63 @@
     <section class="workspace" id="prices">
       <div class="section-heading">
         <div>
-          <div class="eyebrow muted" data-i18n="sectionEyebrow">YOUR LOCAL MARKET, AT A GLANCE</div>
-          <h2 data-i18n="sectionTitle">Today's mandi prices</h2>
-        </div><button class="refresh-button" id="refresh"><span class="refresh-icon">↻</span><span
-            data-i18n="refresh">Refresh data</span></button>
+          <div class="eyebrow muted">YOUR LOCAL MARKET, AT A GLANCE</div>
+          <h2>Today's mandi prices</h2>
+        </div><button class="refresh-button" id="refresh"><span class="refresh-icon">↻</span><span>Refresh data</span></button>
       </div>
-      <div class="filters"><label class="filter-field crop-field"><span data-i18n="cropLabel">WHAT ARE YOU
+      <div class="filters"><label class="filter-field crop-field"><span>WHAT ARE YOU
             SELLING?</span><span class="input-wrap"><span class="search-icon">⌕</span><input id="crop-search"
-              list="crops" placeholder="Search a fruit or vegetable" data-i18n-placeholder="cropPlaceholder"
-              autocomplete="off" /><datalist id="crops"></datalist></span></label><label class="filter-field"><span
-            data-i18n="stateLabel">STATE</span><select id="state-filter">
-            <option value="" data-i18n="allStates">All states</option>
-          </select></label><label class="filter-field"><span data-i18n="districtLabel">DISTRICT</span><select
+              list="crops" placeholder="Search a fruit or vegetable"
+              autocomplete="off" /><datalist id="crops"></datalist></span></label><label class="filter-field"><span>STATE</span><select id="state-filter">
+            <option value="">All states</option>
+          </select></label><label class="filter-field"><span>DISTRICT</span><select
             id="district-filter" disabled>
-            <option value="" data-i18n="anyDistrict">Any district</option>
-          </select></label><button class="search-button" id="search-button" data-i18n="searchButton">See prices
+            <option value="">Any district</option>
+          </select></label><button class="search-button" id="search-button">See prices
           <span>→</span></button></div>
       <div class="crop-chips" id="crop-chips" aria-label="Quick vegetable filters">
-        <button type="button" class="chip active" data-crop="" data-i18n-crop="allVeg">All Vegetables</button>
-        <button type="button" class="chip" data-crop="Potato" data-i18n-crop="potato">🥔 Potato</button>
-        <button type="button" class="chip" data-crop="Tomato" data-i18n-crop="tomato">🍅 Tomato</button>
-        <button type="button" class="chip" data-crop="Onion" data-i18n-crop="onion">🧅 Onion</button>
-        <button type="button" class="chip" data-crop="Green Chilli" data-i18n-crop="chilli">🌶️ Chilli</button>
-        <button type="button" class="chip" data-crop="Brinjal" data-i18n-crop="brinjal">🍆 Brinjal</button>
-        <button type="button" class="chip" data-crop="Garlic" data-i18n-crop="garlic">🧄 Garlic</button>
-        <button type="button" class="chip" data-crop="Cabbage" data-i18n-crop="cabbage">🥬 Cabbage</button>
-        <button type="button" class="chip" data-crop="Cauliflower" data-i18n-crop="cauliflower">🥦 Cauliflower</button>
+        <button type="button" class="chip active" data-crop="">All Vegetables</button>
+        <button type="button" class="chip" data-crop="Potato">🥔 Potato</button>
+        <button type="button" class="chip" data-crop="Tomato">🍅 Tomato</button>
+        <button type="button" class="chip" data-crop="Onion">🧅 Onion</button>
+        <button type="button" class="chip" data-crop="Green Chilli">🌶️ Chilli</button>
+        <button type="button" class="chip" data-crop="Brinjal">🍆 Brinjal</button>
+        <button type="button" class="chip" data-crop="Garlic">🧄 Garlic</button>
+        <button type="button" class="chip" data-crop="Cabbage">🥬 Cabbage</button>
+        <button type="button" class="chip" data-crop="Cauliflower">🥦 Cauliflower</button>
       </div>
       <div class="notice-row">
-        <div class="source-status"><span class="status-dot" id="status-dot"></span><span id="status-text"
-            data-i18n="statusLoading">Loading official AGMARKNET prices…</span></div><span
+        <div class="source-status"><span class="status-dot" id="status-dot"></span><span id="status-text">Loading official AGMARKNET prices…</span></div><span
           class="updated-label" id="last-updated"></span>
       </div>
       <div class="empty-state hidden" id="empty-state">
         <div class="empty-icon">⌕</div>
-        <h3 data-i18n="emptyTitle">No market reports found</h3>
-        <p data-i18n="emptyText">No price reports found for this selection today. Try selecting another crop or choosing "All states".</p>
+        <h3>No market reports found</h3>
+        <p>No price reports found for this selection today. Try selecting another crop or choosing "All states".</p>
       </div>
       <!-- Price Range & Market Trend Summary -->
       <div class="history-section" id="history">
         <div class="history-heading">
           <div>
-            <div class="eyebrow muted" data-i18n="historyEyebrow">PRICE RANGE &amp; MARKET TREND</div>
-            <h2 data-i18n="historyTitle">Today's price range</h2>
-            <p data-i18n="historyText">Official modal, minimum, and maximum prices for your selected crop.</p>
+            <div class="eyebrow muted">PRICE RANGE &amp; MARKET TREND</div>
+            <h2>Today's price range</h2>
+            <p>Official modal, minimum, and maximum prices for your selected crop.</p>
           </div>
-          <div class="history-range"><span class="range-active" data-i18n="range30">Official reports</span></div>
+          <div class="history-range"><span class="range-active">Official reports</span></div>
         </div>
         <div class="chart-card">
           <div class="chart-meta">
-            <div><span class="chart-kicker" id="chart-kicker" data-i18n="chartLabel">MODAL PRICE · ₹ / QUINTAL</span>
+            <div><span class="chart-kicker" id="chart-kicker">MODAL PRICE · ₹ / QUINTAL</span>
               <div class="chart-value" id="chart-latest">—</div>
             </div>
-            <div class="chart-period" id="chart-period" data-i18n="chartAwait">Waiting for market data</div>
+            <div class="chart-period" id="chart-period">Waiting for market data</div>
           </div>
           <div class="chart-area" id="chart-area">
-            <div class="chart-empty" data-i18n="chartEmpty">Price history will appear here when real reports are
+            <div class="chart-empty">Price history will appear here when real reports are
               available.</div>
           </div>
-          <div class="chart-legend"><span><i></i><span data-i18n="chartLegend">Daily median across matching
-                markets</span></span><span data-i18n="chartSource">Official daily reports</span></div>
+          <div class="chart-legend"><span><i></i><span>Daily median across matching
+                markets</span></span><span>Official daily reports</span></div>
         </div>
       </div>
 
@@ -126,25 +131,25 @@
           <div>
             <h3 id="results-title">Market reports</h3><span id="result-count"></span>
           </div>
-          <div class="unit-note" data-i18n="unitNote">Prices shown per quintal (100 kg)</div>
+          <div class="unit-note">Prices shown per quintal (100 kg)</div>
         </div>
         <div class="table-scroll">
           <table>
             <thead>
               <tr>
-                <th data-i18n="thMarket">MARKET</th>
-                <th data-i18n="thDistrict">DISTRICT · STATE</th>
-                <th data-i18n="thDate">ARRIVAL DATE</th>
-                <th data-i18n="thMin">MIN</th>
-                <th data-i18n="thModal">MODAL PRICE</th>
-                <th data-i18n="thMax">MAX</th>
+                <th>MARKET</th>
+                <th>DISTRICT · STATE</th>
+                <th>ARRIVAL DATE</th>
+                <th>MIN</th>
+                <th>MODAL PRICE</th>
+                <th>MAX</th>
               </tr>
             </thead>
             <tbody id="price-rows"></tbody>
           </table>
         </div>
         <div class="mobile-cards" id="mobile-cards"></div>
-        <div class="table-footer"><span data-i18n="sourceLabel">Source: AGMARKNET · Government of India</span><span
+        <div class="table-footer"><span>Source: AGMARKNET · Government of India</span><span
             id="data-freshness"></span></div>
       </div>
     </section>
@@ -152,17 +157,27 @@
     <section class="trust-strip" id="about">
       <div class="trust-icon">✓</div>
       <div>
-        <h3 data-i18n="trustTitle">Real reports. Clear source. Your call.</h3>
-        <p data-i18n="trustText">Prices come from AGMARKNET, published by India's Ministry of Agriculture through the
+        <h3>Real reports. Clear source. Your call.</h3>
+        <p>Prices come from AGMARKNET, published by India's Ministry of Agriculture through the
           open data portal. Reports are daily, and may arrive with a delay.</p>
       </div><a href="https://www.data.gov.in/resource/current-daily-price-various-commodities-various-markets-mandi"
-        target="_blank" rel="noreferrer" data-i18n="sourceLink">View official source ↗</a>
+        target="_blank" rel="noreferrer">View official source ↗</a>
     </section>
   </main>
-  <footer><span class="brand footer-brand"><span class="brand-mark">v</span><span>vej<span
-          class="brand-light">bhav</span></span></span><span data-i18n="footerText">Made for clearer market decisions ·
-      Prices are indicative reports, not a guaranteed offer.</span></footer>
+  <footer><span class="brand footer-brand notranslate"><span class="brand-mark">v</span><span>vej<span
+          class="brand-light">bhav</span></span></span><span>Made for clearer market decisions · Prices are indicative reports, not a guaranteed offer.</span></footer>
 
+  <div id="google_translate_element" style="display:none"></div>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,hi,mr,gu,bn,pa,ta,te,kn,ml,ur,or',
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
 </body>
 
 </html>

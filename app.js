@@ -1,463 +1,98 @@
 const langStore = 'vejbhaav.language';
 
-const copy = {
-  en: {
-    navPrices: 'Market prices',
-    navHistory: 'Price history',
-    navAbout: 'About the data',
-    language: 'Language',
-    heroEyebrow: "INDIA'S MANDI PRICES · STRAIGHT FROM THE SOURCE",
-    heroTitle: 'Know your market.<br /><em>Choose your moment.</em>',
-    heroText: 'Compare today’s reported prices and see how they have moved. Clear information for better selling and fairer buying.',
-    heroNote: 'Official market reports, with the date and source always in view.',
-    sectionEyebrow: 'YOUR LOCAL MARKET, AT A GLANCE',
-    sectionTitle: 'Today’s mandi prices',
-    refresh: 'Refresh data',
-    cropLabel: 'WHAT ARE YOU SELLING?',
-    cropPlaceholder: 'Search a fruit or vegetable (e.g. Potato, Banana)',
-    stateLabel: 'STATE',
-    allStates: 'All states',
-    districtLabel: 'DISTRICT',
-    anyDistrict: 'Any district',
-    searchButton: 'See prices',
-    statusLoading: 'Loading official AGMARKNET prices…',
-    statusConnected: 'Connected to official AGMARKNET reports',
-    statusError: 'Could not load official data. Please refresh or try again later.',
-    statusNoResults: 'No matching reports found in the available data.',
-    emptyTitle: 'No market reports found',
-    emptyText: 'No price reports found for this selection today. Try selecting another crop or choosing "All states".',
-    resultsTitle: 'Market reports',
-    unitNote: 'Prices shown per quintal (100 kg)',
-    thMarket: 'MARKET',
-    thDistrict: 'DISTRICT · STATE',
-    thDate: 'ARRIVAL DATE',
-    thMin: 'MIN',
-    thModal: 'MODAL PRICE',
-    thMax: 'MAX',
-    sourceLabel: 'Source: AGMARKNET · Government of India',
-    historyEyebrow: "PRICE RANGE & MARKET TREND",
-    historyTitle: "Today's price range & trends",
-    historyText: 'Official modal, minimum, and maximum prices for your selected crop.',
-    range30: 'Official reports',
-    chartLabel: 'MODAL PRICE · ₹ / QUINTAL',
-    chartAwait: 'Waiting for market data',
-    chartEmpty: 'Price history will appear here when real reports are available.',
-    chartLegend: 'Daily median across matching markets',
-    chartSource: 'Official AGMARKNET daily reports',
-    trustTitle: 'Real reports. Clear source. Your call.',
-    trustText: 'Prices come from AGMARKNET, published by India’s Ministry of Agriculture through the open data portal. Reports are daily, and may arrive with a delay.',
-    sourceLink: 'View official source ↗',
-    footerText: 'Made for clearer market decisions · Prices are indicative reports, not a guaranteed offer.',
-    resultSingular: 'market report',
-    resultPlural: 'market reports',
-    dateUnknown: 'Date not reported',
-    dateUpdated: 'Data checked',
-    latest: 'Latest reported modal price',
-    chartDays: 'report days shown',
-    chartOneDay: 'report day shown',
-    noCrop: 'All available crops',
-    fresh: 'Most recent report',
-    stale: 'Latest available report',
-    noPrices: 'No price history in the available reports.',
-    chartFilter: 'Showing matching reports in the available dataset.',
-    loading: 'Loading…',
-    errorNetwork: 'The official data service could not be reached. Please try again later.',
-    districtAny: 'Any district',
-    allVeg: 'All Vegetables'
-  },
-  hi: {
-    navPrices: 'मंडी भाव',
-    navHistory: 'भाव का इतिहास',
-    navAbout: 'डेटा के बारे में',
-    language: 'भाषा',
-    heroEyebrow: 'भारत के मंडी भाव · सीधे आधिकारिक स्रोत से',
-    heroTitle: 'बाज़ार को समझें।<br /><em>सही समय चुनें।</em>',
-    heroText: 'आज के दर्ज भावों की तुलना करें और उनका उतार-चढ़ाव देखें। बेहतर बिक्री और उचित खरीद के लिए साफ़ जानकारी।',
-    heroNote: 'आधिकारिक मंडी रिपोर्ट, तारीख़ और स्रोत के साथ।',
-    sectionEyebrow: 'आपकी मंडी, एक नज़र में',
-    sectionTitle: 'आज के मंडी भाव',
-    refresh: 'भाव अपडेट करें',
-    cropLabel: 'आप क्या बेच रहे हैं?',
-    cropPlaceholder: 'फल या सब्ज़ी खोजें (जैसे आलू, केला, टमाटर)',
-    stateLabel: 'राज्य',
-    allStates: 'सभी राज्य',
-    districtLabel: 'ज़िला',
-    anyDistrict: 'कोई भी ज़िला',
-    searchButton: 'भाव देखें',
-    statusLoading: 'सरकारी मंडी रिपोर्ट लोड हो रही हैं…',
-    statusConnected: 'AGMARKNET की आधिकारिक रिपोर्ट से जुड़ा',
-    statusError: 'आधिकारिक डेटा लोड नहीं हो सका। कृपया बाद में प्रयास करें।',
-    statusNoResults: 'उपलब्ध रिपोर्ट में इस खोज का भाव नहीं मिला।',
-    emptyTitle: 'कोई मंडी रिपोर्ट नहीं मिली',
-    emptyText: 'आज के लिए इस फ़सल या राज्य की कोई रिपोर्ट दर्ज नहीं है। कृपया कोई अन्य फ़सल या "सभी राज्य" चुनकर देखें।',
-    resultsTitle: 'मंडी रिपोर्ट',
-    unitNote: 'भाव प्रति क्विंटल (100 किलो)',
-    thMarket: 'मंडी',
-    thDistrict: 'ज़िला · राज्य',
-    thDate: 'आवक की तारीख़',
-    thMin: 'कम',
-    thModal: 'औसत भाव',
-    thMax: 'ज़्यादा',
-    sourceLabel: 'स्रोत: AGMARKNET · भारत सरकार',
-    historyEyebrow: 'आज का भाव दायरा और रुझान',
-    historyTitle: 'आज का मंडी भाव दायरा',
-    historyText: 'चुनी हुई फ़सल के लिए न्यूनतम, औसत और अधिकतम दर्ज सरकारी भाव देखें।',
-    range30: 'आधिकारिक रिपोर्ट',
-    chartLabel: 'औसत भाव · ₹ / क्विंटल',
-    chartAwait: 'मंडी डेटा की प्रतीक्षा में',
-    chartEmpty: 'असली रिपोर्ट उपलब्ध होने पर भाव का इतिहास यहाँ दिखेगा।',
-    chartLegend: 'चुनी मंडियों का रोज़ का औसत भाव',
-    chartSource: 'रोज़ की आधिकारिक AGMARKNET रिपोर्ट',
-    trustTitle: 'असली रिपोर्ट। साफ़ स्रोत। फ़ैसला आपका।',
-    trustText: 'भाव भारत सरकार के कृषि मंत्रालय द्वारा AGMARKNET से प्रकाशित किए जाते हैं। रिपोर्ट रोज़ आती हैं और उनमें देरी हो सकती है।',
-    sourceLink: 'आधिकारिक स्रोत देखें ↗',
-    footerText: 'बेहतर मंडी फ़ैसलों के लिए · ये दर्ज भाव हैं, बिक्री की गारंटी नहीं।',
-    resultSingular: 'मंडी रिपोर्ट',
-    resultPlural: 'मंडी रिपोर्ट',
-    dateUnknown: 'तारीख़ उपलब्ध नहीं',
-    dateUpdated: 'डेटा जाँचा',
-    latest: 'सबसे नया दर्ज औसत भाव',
-    chartDays: 'रिपोर्ट के दिन',
-    chartOneDay: 'रिपोर्ट का दिन',
-    noCrop: 'सभी उपलब्ध फ़सलें',
-    fresh: 'सबसे नई रिपोर्ट',
-    stale: 'नवीनतम उपलब्ध रिपोर्ट',
-    noPrices: 'उपलब्ध रिपोर्ट में भाव का इतिहास नहीं है।',
-    chartFilter: 'उपलब्ध रिपोर्ट में मिलते भाव दिख रहे हैं।',
-    loading: 'लोड हो रहा है…',
-    errorNetwork: 'सरकारी डेटा सेवा से संपर्क नहीं हो पाया। बाद में फिर प्रयास करें।',
-    districtAny: 'कोई भी ज़िला',
-    allVeg: 'सभी सब्जियां'
-  },
-  mr: {
-    navPrices: 'बाजारभाव',
-    navHistory: 'भावाचा इतिहास',
-    navAbout: 'डेटाविषयी',
-    language: 'भाषा',
-    heroEyebrow: 'भारताचे बाजारभाव · थेट अधिकृत स्रोताकडून',
-    heroTitle: 'बाजार समजून घ्या.<br /><em>योग्य वेळ निवडा.</em>',
-    heroText: 'आजच्या नोंदवलेल्या भावांची तुलना करा आणि त्यातील बदल पाहा. योग्य विक्री आणि न्याय्य खरेदीसाठी स्पष्ट माहिती.',
-    heroNote: 'तारीख आणि स्रोतासह अधिकृत बाजार अहवाल.',
-    sectionEyebrow: 'तुमची बाजारपेठ, एका नजरेत',
-    sectionTitle: 'आजचे बाजारभाव',
-    refresh: 'भाव ताजे करा',
-    cropLabel: 'तुम्ही काय विकत आहात?',
-    cropPlaceholder: 'फळ किंवा भाजी शोधा (उदा. बटाटा, केळी, टोमॅटो)',
-    stateLabel: 'राज्य',
-    allStates: 'सर्व राज्ये',
-    districtLabel: 'जिल्हा',
-    anyDistrict: 'कोणताही जिल्हा',
-    searchButton: 'भाव पहा',
-    statusLoading: 'सरकारी बाजार अहवाल लोड होत आहेत…',
-    statusConnected: 'AGMARKNET च्या अधिकृत अहवालाशी जोडले',
-    statusError: 'अधिकृत डेटा लोड होऊ शकला नाही. कृपया नंतर पुन्हा प्रयत्न करा.',
-    statusNoResults: 'उपलब्ध अहवालांत जुळणारे भाव सापडले नाहीत.',
-    emptyTitle: 'कोणतेही बाजार अहवाल सापडले नाहीत',
-    emptyText: 'आज या पिकासाठी किंवा राज्यासाठी कोणतेही अहवाल उपलब्ध नाहीत. कृपया दुसरे पीक किंवा "सर्व राज्ये" निवडून पहा.',
-    resultsTitle: 'बाजार अहवाल',
-    unitNote: 'भाव प्रति क्विंटल (१०० किलो)',
-    thMarket: 'बाजार',
-    thDistrict: 'जिल्हा · राज्य',
-    thDate: 'आवक तारीख',
-    thMin: 'किमान',
-    thModal: 'मध्यम भाव',
-    thMax: 'कमाल',
-    sourceLabel: 'स्रोत: AGMARKNET · भारत सरकार',
-    historyEyebrow: 'आजची भाव कक्षा आणि कल',
-    historyTitle: 'आजची बाजारभाव कक्षा',
-    historyText: 'निवडलेल्या पिकासाठी किमान, मध्यम आणि कमाल नोंदवलेले सरकारी भाव पहा.',
-    range30: 'अधिकृत अहवाल',
-    chartLabel: 'मध्यम भाव · ₹ / क्विंटल',
-    chartAwait: 'बाजार डेटाची प्रतीक्षा',
-    chartEmpty: 'खरे अहवाल उपलब्ध झाल्यावर भावांचा इतिहास येथे दिसेल.',
-    chartLegend: 'निवडलेल्या बाजारांचा रोजचा मध्यम भाव',
-    chartSource: 'अधिकृत रोजचे AGMARKNET अहवाल',
-    trustTitle: 'खरे अहवाल. स्पष्ट स्रोत. निर्णय तुमचा.',
-    trustText: 'भाव भारताच्या कृषी मंत्रालयाकडून AGMARKNET द्वारे खुले डेटा पोर्टलवर प्रकाशित होतात. अहवाल रोज येतात; विलंब होऊ शकतो.',
-    sourceLink: 'अधिकृत स्रोत पहा ↗',
-    footerText: 'चांगल्या बाजार निर्णयांसाठी · हे सूचक अहवाल आहेत, विक्रीची हमी नाही.',
-    resultSingular: 'बाजार अहवाल',
-    resultPlural: 'बाजार अहवाल',
-    dateUnknown: 'तारीख नोंदलेली नाही',
-    dateUpdated: 'डेटा तपासला',
-    latest: 'नवीनतम नोंदवलेला मध्यम भाव',
-    chartDays: 'अहवालांचे दिवस',
-    chartOneDay: 'अहवालाचा दिवस',
-    noCrop: 'सर्व उपलब्ध पिके',
-    fresh: 'सर्वात नवीन अहवाल',
-    stale: 'नवीनतम उपलब्ध अहवाल',
-    noPrices: 'उपलब्ध अहवालांत भावांचा इतिहास नाही.',
-    chartFilter: 'उपलब्ध अहवालांतील जुळणारे भाव दाखवत आहोत.',
-    loading: 'लोड होत आहे…',
-    errorNetwork: 'सरकारी डेटा सेवेशी संपर्क झाला नाही. कृपया नंतर पुन्हा प्रयत्न करा.',
-    districtAny: 'कोणताही जिल्हा',
-    allVeg: 'सर्व भाज्या'
-  }
-};
-
-const CROP_TRANSLATIONS = {
-  // Vegetables
-  'Banana - Green': { hi: 'हरा केला (कच्चा केला)', mr: 'हिरवी केळी (कच्ची केळी)' },
-  'Banana': { hi: 'केला', mr: 'केळी' },
-  'Ashgourd': { hi: 'पेठा (सफेद कुम्हड़ा)', mr: 'कोहळा' },
-  'Cowpea(Veg)': { hi: 'लोबिया (सब्जी)', mr: 'चवळी (भाजी)' },
-  'Cowpea (Veg)': { hi: 'लोबिया (सब्जी)', mr: 'चवळी (भाजी)' },
-  'Cowpea': { hi: 'लोबिया', mr: 'चवळी' },
-  'Green Chilli': { hi: 'हरी मिर्च', mr: 'हिरवी मिरची' },
-  'Green Chilly': { hi: 'हरी मिर्च', mr: 'हिरवी मिरची' },
-  'Chilli': { hi: 'मिर्च', mr: 'मिरची' },
-  'Chilli Red': { hi: 'लाल मिर्च', mr: 'लाल मिरची' },
-  'Snakeguard': { hi: 'चिचिंडा (पड़वल)', mr: 'पडवळ' },
-  'Snake Gourd': { hi: 'चिचिंडा (पड़वल)', mr: 'पडवळ' },
-  'Potato': { hi: 'आलू', mr: 'बटाटा' },
-  'Tomato': { hi: 'टमाटर', mr: 'टोमॅटो' },
-  'Onion': { hi: 'प्याज', mr: 'कांदा' },
-  'Brinjal': { hi: 'बैंगन', mr: 'वांगी' },
-  'Garlic': { hi: 'लहसुन', mr: 'लसूण' },
-  'Cabbage': { hi: 'पत्तागोभी', mr: 'कोबी' },
-  'Cauliflower': { hi: 'फूलगोभी', mr: 'फ्लॉवर' },
-  'Bottle gourd': { hi: 'लौकी', mr: 'दुधी भोपळा' },
-  'Bitter gourd': { hi: 'करेला', mr: 'कारले' },
-  'Ridgeguard(Tori)': { hi: 'तोरई', mr: 'दोडका' },
-  'Ridge Gourd': { hi: 'तोरई', mr: 'दोडका' },
-  'Sponge Gourd': { hi: 'घिया तोरी', mr: 'घोसवळे' },
-  'Pointed gourd (Parval)': { hi: 'परवल', mr: 'परवळ' },
-  'Cucumber(Kheera)': { hi: 'खीरा', mr: 'काकडी' },
-  'Cucumber': { hi: 'खीरा', mr: 'काकडी' },
-  'Bhindi(Ladies Finger)': { hi: 'भिंडी', mr: 'भेंडी' },
-  'Ladies Finger': { hi: 'भिंडी', mr: 'भेंडी' },
-  'Capsicum': { hi: 'शिमला मिर्च', mr: 'ढोबळी मिरची' },
-  'Carrot': { hi: 'गाजर', mr: 'गाजर' },
-  'Radish': { hi: 'मूली', mr: 'मुळा' },
-  'Spinach': { hi: 'पालक', mr: 'पालक' },
-  'Beetroot': { hi: 'चुकंदर', mr: 'बीट' },
-  'Sweet Potato': { hi: 'शकरकंद', mr: 'रताळे' },
-  'Pumpkin': { hi: 'कद्दू', mr: 'लाल भोपळा' },
-  'Peas Wet': { hi: 'हरी मटर', mr: 'ओला मटार' },
-  'Green Peas': { hi: 'हरी मटर', mr: 'हिरवे मटार' },
-  'Peas(Dry)': { hi: 'सूखी मटर', mr: 'सुक्या मटार' },
-  'Ginger(Green)': { hi: 'अदरक', mr: 'आले' },
-  'Ginger': { hi: 'अदरक', mr: 'आले' },
-  'Ginger(Dry)': { hi: 'सोंठ', mr: 'सुंठ' },
-  'Coriander(Leaves)': { hi: 'धनिया पत्ता', mr: 'कोथिंबीर' },
-  'Coriander': { hi: 'धनिया', mr: 'कोथिंबीर' },
-  'Fenugreek(Leaves)': { hi: 'मेथी', mr: 'मेथी' },
-  'Fenugreek': { hi: 'मेथी दाना', mr: 'मेथी' },
-  'Mint(Pudina)': { hi: 'पुदीना', mr: 'पुदिना' },
-  'Curry leaves': { hi: 'कढ़ी पत्ता', mr: 'कढीपत्ता' },
-  'Drumstick': { hi: 'सहजन (मुनगा)', mr: 'शेवगा' },
-  'Colocasia': { hi: 'अरबी', mr: 'अळू' },
-  'Elephant Yam (Suran)': { hi: 'सूरन (जिमीकंद)', mr: 'सुरण' },
-  'Mushroom': { hi: 'मशरूम', mr: 'मशरूम' },
-  // Fruits
-  'Apple': { hi: 'सेब', mr: 'सफरचंद' },
-  'Mango': { hi: 'आम', mr: 'आंबा' },
-  'Orange': { hi: 'संतरा', mr: 'संत्री' },
-  'Papaya': { hi: 'पपीता', mr: 'पपई' },
-  'Pomegranate': { hi: 'अनार', mr: 'डाळिंब' },
-  'Water Melon': { hi: 'तरबूज', mr: 'कलिंगड' },
-  'Lemon': { hi: 'नींबू', mr: 'लिंबू' },
-  'Lime': { hi: 'नींबू', mr: 'लिंबू' },
-  'Guava': { hi: 'अमरूद', mr: 'पेरू' },
-  'Grapes': { hi: 'अंगूर', mr: 'द्राक्षे' },
-  'Pineapple': { hi: 'अनानास', mr: 'अननस' },
-  'Sapota': { hi: 'चीकू', mr: 'चिकू' },
-  'Custard Apple': { hi: 'सीताफल (शरीफा)', mr: 'सीताफळ' },
-  'Coconut': { hi: 'नारियल', mr: 'नारळ' },
-  'Tender Coconut': { hi: 'डाभ (कच्चा नारियल)', mr: 'शहाळे' },
-  // Crops & Grains
-  'Wheat': { hi: 'गेहूं', mr: 'गहू' },
-  'Rice': { hi: 'चावल', mr: 'तांदूळ' },
-  'Paddy(Dhan)': { hi: 'धान', mr: 'भात (धान)' },
-  'Maize': { hi: 'मक्का', mr: 'मका' },
-  'Mustard': { hi: 'सरसों', mr: 'मोहरी' },
-  'Soybean': { hi: 'सोयाबीन', mr: 'सोयाबीन' },
-  'Cotton': { hi: 'कपास', mr: 'कापूस' },
-  'Gram Raw(Chhana)': { hi: 'चना', mr: 'हरभरा' },
-  'Bengal Gram(Gram)': { hi: 'चना', mr: 'हरभरा' },
-  'Green Gram (Moong)': { hi: 'मूंग', mr: 'मूग' },
-  'Black Gram (Urd Crop)': { hi: 'उड़द', mr: 'उडीद' },
-  'Arhar (Tur/Red Gram)': { hi: 'अरहर (तुअर)', mr: 'तूर' },
-  'Groundnut': { hi: 'मूंगफली', mr: 'भुईमूग / शेंगदाणा' },
-  'Jowar(Sorghum)': { hi: 'ज्वार', mr: 'ज्वारी' },
-  'Bajra(Pearl Millet)': { hi: 'बाजरा', mr: 'बाजरी' },
-  'Ragi (Finger Millet)': { hi: 'रागी', mr: 'नाचणी' },
-  'Turmeric': { hi: 'हल्दी', mr: 'हळद' },
-  'Jaggery': { hi: 'गुड़', mr: 'गूळ' },
-  'Sugar': { hi: 'चीनी', mr: 'साखर' }
-};
-
-const VARIETY_TRANSLATIONS = {
-  'Other': { hi: 'अन्य', mr: 'इतर' },
-  'Ashgourd': { hi: 'पेठा', mr: 'कोहळा' },
-  'Green Chilly': { hi: 'हरी मिर्च', mr: 'हिरवी मिरची' },
-  'Cowpea (Veg)': { hi: 'लोबिया (सब्जी)', mr: 'चवळी (भाजी)' },
-  'Snakeguard': { hi: 'चिचिंडा', mr: 'पडवळ' },
-  'Local': { hi: 'स्थानीय', mr: 'स्थानिक' },
-  'Deshi': { hi: 'देसी', mr: 'देशी' },
-  'Desi': { hi: 'देसी', mr: 'देशी' },
-  'Hybrid': { hi: 'हाइब्रिड', mr: 'संकरित' },
-  'Medium': { hi: 'मध्यम', mr: 'मध्यम' },
-  'Small': { hi: 'छोटा', mr: 'लहान' },
-  'Big': { hi: 'बड़ा', mr: 'मोठा' },
-  'Green': { hi: 'हरा', mr: 'हिरवा' },
-  'Red': { hi: 'लाल', mr: 'लाल' },
-  'White': { hi: 'सफेद', mr: 'पांढरा' },
-  'Yellow': { hi: 'पीला', mr: 'पिवळा' },
-  'Common': { hi: 'सामान्य', mr: 'सामान्य' }
-};
-
-const STATE_TRANSLATIONS = {
-  'Maharashtra': { hi: 'महाराष्ट्र', mr: 'महाराष्ट्र' },
-  'Uttar Pradesh': { hi: 'उत्तर प्रदेश', mr: 'उत्तर प्रदेश' },
-  'Madhya Pradesh': { hi: 'मध्य प्रदेश', mr: 'मध्य प्रदेश' },
-  'Gujarat': { hi: 'गुजरात', mr: 'गुजरात' },
-  'Rajasthan': { hi: 'राजस्थान', mr: 'राजस्थान' },
-  'Punjab': { hi: 'पंजाब', mr: 'पंजाब' },
-  'Haryana': { hi: 'हरियाणा', mr: 'हरियाणा' },
-  'Karnataka': { hi: 'कर्नाटक', mr: 'कर्नाटक' },
-  'Kerala': { hi: 'केरल', mr: 'केरळ' },
-  'Keralam': { hi: 'केरल', mr: 'केरळ' },
-  'Tamil Nadu': { hi: 'तमिलनाडु', mr: 'तामिळनाडू' },
-  'Andhra Pradesh': { hi: 'आंध्र प्रदेश', mr: 'आंध्र प्रदेश' },
-  'Telangana': { hi: 'तेलंगाना', mr: 'तेलंगणा' },
-  'West Bengal': { hi: 'पश्चिम बंगाल', mr: 'पश्चिम बंगाल' },
-  'Bihar': { hi: 'बिहार', mr: 'बिहार' },
-  'Odisha': { hi: 'ओडिशा', mr: 'ओडिशा' },
-  'Himachal Pradesh': { hi: 'हिमाचल प्रदेश', mr: 'हिमाचल प्रदेश' },
-  'Uttarakhand': { hi: 'उत्तराखंड', mr: 'उत्तराखंड' },
-  'Assam': { hi: 'असम', mr: 'आसाम' },
-  'Chhattisgarh': { hi: 'छत्तीसगढ़', mr: 'छत्तीसगड' },
-  'Jharkhand': { hi: 'झारखंड', mr: 'झारखंड' },
-  'Goa': { hi: 'गोवा', mr: 'गोवा' },
-  'Delhi': { hi: 'दिल्ली', mr: 'दिल्ली' },
-  'Jammu and Kashmir': { hi: 'जम्मू और कश्मीर', mr: 'जम्मू आणि काश्मीर' }
+// Fast search mapper for common regional names to AGMARKNET English commodities
+const CROP_SEARCH_MAP = {
+  // Hindi, Marathi, Gujarati, Punjabi, Bengali, Tamil, Telugu, Kannada, Malayalam
+  'आलू': 'Potato', 'बटाटा': 'Potato', 'બટાટા': 'Potato', 'আলু': 'Potato', 'ਆਲੂ': 'Potato', 'உருளைக்கிழங்கு': 'Potato', 'బంగాళాదుంప': 'Potato', 'ಆಲೂಗಡ್ಡೆ': 'Potato',
+  'टमाटर': 'Tomato', 'टोमॅटो': 'Tomato', 'ટામેટા': 'Tomato', 'টমেটো': 'Tomato', 'ਟਮਾਟਰ': 'Tomato', 'தக்காளி': 'Tomato', 'టమోటా': 'Tomato', 'ಟೊಮೆಟೊ': 'Tomato', 'തക്കാളി': 'Tomato',
+  'प्याज': 'Onion', 'कांदा': 'Onion', 'ડુંગળી': 'Onion', 'পেঁয়াজ': 'Onion', 'ਪਿਆਜ਼': 'Onion', 'வெங்காயம்': 'Onion', 'ఉల్లిపాయ': 'Onion', 'ಈರುಳ್ಳಿ': 'Onion', 'സവാള': 'Onion',
+  'मिर्च': 'Chilli', 'हरी मिर्च': 'Green Chilli', 'हिरवी मिरची': 'Green Chilli', 'લીલા મરચા': 'Green Chilli', 'কাঁচা মরিচ': 'Green Chilli', 'பச்சை மிளகாய்': 'Green Chilli', 'పచ్చిమిర్చి': 'Green Chilli',
+  'बैंगन': 'Brinjal', 'वांगी': 'Brinjal', 'રીંગણ': 'Brinjal', 'বেগুন': 'Brinjal', 'ਬੈਂਗਣ': 'Brinjal', 'கத்தரிக்காய்': 'Brinjal', 'వంకాయ': 'Brinjal', 'ಬದನೆಕಾಯಿ': 'Brinjal',
+  'लहसुन': 'Garlic', 'लसूण': 'Garlic', 'લસણ': 'Garlic', 'রসুন': 'Garlic', 'ਲਸਣ': 'Garlic', 'பூண்டு': 'Garlic', 'వెల్లుల్లి': 'Garlic', 'ಬೆಳ್ಳುಳ್ಳಿ': 'Garlic',
+  'अदरक': 'Ginger', 'आले': 'Ginger', 'આદુ': 'Ginger', 'আদা': 'Ginger', 'ਅਦਰਕ': 'Ginger', 'இஞ்சி': 'Ginger', 'అల్లం': 'Ginger', 'ಶುಂಠಿ': 'Ginger',
+  'पत्तागोभी': 'Cabbage', 'कोबी': 'Cabbage', 'કોબીજ': 'Cabbage', 'বাঁধাকপি': 'Cabbage', 'ਬੰਦਗੋਭੀ': 'Cabbage', 'முட்டைக்கோஸ்': 'Cabbage', 'క్యాబేజీ': 'Cabbage',
+  'फूलगोभी': 'Cauliflower', 'फ्लॉवर': 'Cauliflower', 'ફૂલકોબી': 'Cauliflower', 'ফুলকপি': 'Cauliflower', 'ਕੌਲੀਫਲਾਵਰ': 'Cauliflower', 'காலிஃபிளவர்': 'Cauliflower',
+  'केला': 'Banana', 'केळी': 'Banana', 'કેળા': 'Banana', 'কলা': 'Banana', 'ਕੇਲਾ': 'Banana', 'வாழைப்பழம்': 'Banana', 'అరటి': 'Banana', 'ಬಾಳೆಹಣ್ಣು': 'Banana'
 };
 
 const COMMON_CROPS = [
-  'Potato', 'Tomato', 'Onion', 'Green Chilli', 'Brinjal', 'Cabbage',
-  'Cauliflower', 'Carrot', 'Garlic', 'Ginger(Green)', 'Bottle gourd',
-  'Bitter gourd', 'Cucumber(Kheera)', 'Bhindi(Ladies Finger)', 'Capsicum',
-  'Banana - Green', 'Ashgourd', 'Cowpea(Veg)', 'Snakeguard',
-  'Spinach', 'Pumpkin', 'Radish', 'Peas Wet', 'Apple', 'Banana', 'Mango',
-  'Orange', 'Lemon', 'Pomegranate', 'Papaya', 'Water Melon'
+  'Apple', 'Banana', 'Bitter gourd', 'Bottle gourd', 'Brinjal', 'Cabbage',
+  'Capsicum', 'Carrot', 'Cauliflower', 'Chilli Red', 'Coconut', 'Coriander(Leaves)',
+  'Cucumber(Kheera)', 'Garlic', 'Ginger(Green)', 'Green Chilli', 'Lemon',
+  'Mango', 'Mushroom', 'Onion', 'Orange', 'Papaya', 'Peas Wet',
+  'Pineapple', 'Pomegranate', 'Potato', 'Pumpkin', 'Radish', 'Spinach',
+  'Sweet Potato', 'Tomato', 'Water Melon'
 ];
 
-let language = localStorage.getItem(langStore) || 'en';
 let allRecords = [];
 let latestRecords = [];
 
 const $ = (id) => document.getElementById(id);
-const tr = (key) => copy[language]?.[key] || copy.en[key] || key;
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
 
-function trCrop(name) {
-  if (!name || language === 'en') return name;
-  const s = name.trim();
-  if (CROP_TRANSLATIONS[s]?.[language]) return CROP_TRANSLATIONS[s][language];
-  const sLow = s.toLowerCase();
-  for (const [k, v] of Object.entries(CROP_TRANSLATIONS)) {
-    if (k.toLowerCase() === sLow && v[language]) return v[language];
+async function resolveCommoditySearch(raw) {
+  if (!raw) return '';
+  const trimmed = raw.trim();
+  if (/^[a-zA-Z\s\-()]+$/.test(trimmed)) return trimmed;
+
+  const lower = trimmed.toLowerCase();
+  if (CROP_SEARCH_MAP[lower] || CROP_SEARCH_MAP[trimmed]) {
+    return CROP_SEARCH_MAP[lower] || CROP_SEARCH_MAP[trimmed];
   }
-  for (const [k, v] of Object.entries(CROP_TRANSLATIONS)) {
-    if (sLow.includes(k.toLowerCase()) && v[language]) return v[language];
-  }
-  return name;
+
+  // Google Translate fallback for any unmapped regional language term
+  try {
+    const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(trimmed)}`);
+    const data = await res.json();
+    const trans = data?.[0]?.[0]?.[0];
+    if (trans && typeof trans === 'string') return trans.trim();
+  } catch (_) {}
+
+  return trimmed;
 }
 
-function trVariety(variety) {
-  if (!variety || language === 'en') return variety;
-  const s = variety.trim();
-  if (VARIETY_TRANSLATIONS[s]?.[language]) return VARIETY_TRANSLATIONS[s][language];
-  for (const [k, v] of Object.entries(VARIETY_TRANSLATIONS)) {
-    if (k.toLowerCase() === s.toLowerCase() && v[language]) return v[language];
-  }
-  return variety;
+function getGoogleCookieLang() {
+  const match = document.cookie.match(/(?:^|;\s*)googtrans=\/en\/([a-zA-Z\-]+)/);
+  return match ? match[1] : null;
 }
 
-function trState(state) {
-  if (!state || language === 'en') return state;
-  const s = state.trim();
-  return STATE_TRANSLATIONS[s]?.[language] || state;
-}
+function setGoogleTranslateLanguage(lang) {
+  localStorage.setItem(langStore, lang);
 
-function resolveCommoditySearch(query) {
-  const q = (query || '').trim();
-  if (!q) return '';
-  const qLow = q.toLowerCase();
-  for (const [eng, trans] of Object.entries(CROP_TRANSLATIONS)) {
-    if (eng.toLowerCase() === qLow) return eng;
-    if (trans.hi && (trans.hi.toLowerCase().includes(qLow) || qLow.includes(trans.hi.toLowerCase()))) return eng;
-    if (trans.mr && (trans.mr.toLowerCase().includes(qLow) || qLow.includes(trans.mr.toLowerCase()))) return eng;
-  }
-  return q;
-}
-
-function formatCrop(commodity, variety) {
-  if (language === 'en') {
-    return esc([commodity, variety].filter(Boolean).join(' · '));
-  }
-  const cTrans = trCrop(commodity);
-  const vTrans = trVariety(variety);
-  const vPart = (vTrans && vTrans !== cTrans && vTrans.toLowerCase() !== commodity.toLowerCase()) ? ` · ${esc(vTrans)}` : '';
-  if (cTrans !== commodity) {
-    return `${esc(cTrans)}${vPart} <span class="en-sub">(${esc(commodity)})</span>`;
-  }
-  return esc([commodity, variety].filter(Boolean).join(' · '));
-}
-
-function formatLocation(market, district, state) {
-  if (language === 'en') {
-    return esc([market, district, state].filter(Boolean).join(' · '));
-  }
-  const sTrans = trState(state);
-  let mTrans = market;
-  if (language === 'hi' && mTrans.includes('Market')) {
-    mTrans = mTrans.replace(/\bMarket\b/i, 'मंडी');
-  } else if (language === 'mr' && mTrans.includes('Market')) {
-    mTrans = mTrans.replace(/\bMarket\b/i, 'बाजार');
-  }
-  return esc([mTrans, district, sTrans].filter(Boolean).join(' · '));
-}
-
-function applyLanguage() {
-  document.documentElement.lang = language;
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const text = tr(el.dataset.i18n);
-    if (el.tagName === 'INPUT') el.placeholder = text;
-    else el.innerHTML = text;
-  });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => el.placeholder = tr(el.dataset.i18nPlaceholder));
-
-  // Translate quick vegetable chips
-  document.querySelectorAll('[data-i18n-crop]').forEach(chip => {
-    const cropKey = chip.dataset.crop;
-    if (!cropKey) {
-      chip.textContent = tr('allVeg');
-    } else {
-      const parts = chip.textContent.trim().split(' ');
-      const emoji = parts[0] || '';
-      const localName = trCrop(cropKey);
-      chip.textContent = `${emoji} ${localName}`;
+  // Set Google Translate cookie
+  const cookieValue = `/en/${lang}`;
+  document.cookie = `googtrans=${cookieValue}; path=/;`;
+  if (window.location.hostname) {
+    document.cookie = `googtrans=${cookieValue}; path=/; domain=${window.location.hostname};`;
+    const parts = window.location.hostname.split('.');
+    if (parts.length > 1) {
+      document.cookie = `googtrans=${cookieValue}; path=/; domain=.${parts.slice(-2).join('.')};`;
     }
-  });
-
-  const toggleBtn = $('toggle-key');
-  if (toggleBtn) {
-    toggleBtn.textContent = tr($('api-key')?.type === 'password' ? 'show' : 'hide');
   }
 
-  // Re-populate state and district dropdowns with translated state names
-  if (allRecords.length) {
-    populateFilters(allRecords);
-    displayResults(selectedRecords());
+  // If selecting English, clear the translation cookie
+  if (lang === 'en') {
+    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    if (window.location.hostname) {
+      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname;
+    }
+  }
+
+  // Trigger Google Translate dropdown
+  const teCombo = document.querySelector('.goog-te-combo');
+  if (teCombo) {
+    teCombo.value = lang;
+    teCombo.dispatchEvent(new Event('change'));
+  } else {
+    // Reload so Google Translate picks up the cookie on page load
+    window.location.reload();
   }
 }
 
 function formatPrice(value) {
   const n = Number(value);
   if (!Number.isFinite(n) || n <= 0) return '—';
-  return new Intl.NumberFormat(language === 'en' ? 'en-IN' : language === 'hi' ? 'hi-IN' : 'mr-IN', { maximumFractionDigits: 0 }).format(n);
+  return new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(n);
 }
 
 function formatPriceDisplay(value) {
@@ -475,7 +110,7 @@ function dateValue(raw) {
 
 function formatDate(raw) {
   const d = (raw instanceof Date) ? raw : dateValue(raw);
-  return d ? new Intl.DateTimeFormat(language === 'en' ? 'en-IN' : language === 'hi' ? 'hi-IN' : 'mr-IN', { day: 'numeric', month: 'short', year: 'numeric' }).format(d) : tr('dateUnknown');
+  return d ? new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }).format(d) : 'Date not reported';
 }
 
 function normalise(r) {
@@ -518,87 +153,71 @@ async function getRecords(filters = {}) {
 
 function selectedRecords() {
   const rawCrop = $('crop-search').value.trim();
-  const crop = resolveCommoditySearch(rawCrop).toLocaleLowerCase();
-  const state = $('state-filter').value.toLocaleLowerCase();
-  const district = $('district-filter').value.toLocaleLowerCase();
+  const crop = rawCrop.toLowerCase();
+  const state = $('state-filter').value.toLowerCase();
+  const district = $('district-filter').value.toLowerCase();
 
   return allRecords.filter(r => {
-    const rCrop = r.commodity.toLocaleLowerCase();
-    const matchCrop = !crop || rCrop.includes(crop) || (rawCrop && trCrop(r.commodity).toLocaleLowerCase().includes(rawCrop.toLowerCase()));
-    const matchState = !state || r.state.toLocaleLowerCase() === state;
-    const matchDistrict = !district || r.district.toLocaleLowerCase() === district;
+    const rCrop = r.commodity.toLowerCase();
+    const matchCrop = !crop || rCrop.includes(crop) || (rawCrop && crop.includes(rCrop));
+    const matchState = !state || r.state.toLowerCase() === state;
+    const matchDistrict = !district || r.district.toLowerCase() === district;
     return matchCrop && matchState && matchDistrict;
   });
 }
 
 function updateSelect(select, items, placeholder) {
   const previous = select.value;
-  // items can be string array or {value, label} array
-  const opts = items.map(it => {
-    const val = typeof it === 'string' ? it : it.value;
-    const lab = typeof it === 'string' ? it : it.label;
-    return `<option value="${esc(val)}">${esc(lab)}</option>`;
-  }).join('');
+  const opts = items.map(it => `<option value="${esc(it)}">${esc(it)}</option>`).join('');
   select.innerHTML = `<option value="">${esc(placeholder)}</option>` + opts;
-  if (items.some(it => (typeof it === 'string' ? it : it.value) === previous)) {
+  if (items.includes(previous)) {
     select.value = previous;
   }
 }
 
 function populateFilters(records) {
   const rawStates = [...new Set(records.map(r => r.state).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-  const stateItems = rawStates.map(st => {
-    const trans = trState(st);
-    return {
-      value: st,
-      label: (trans && trans !== st && language !== 'en') ? `${trans} (${st})` : st
-    };
-  });
-  updateSelect($('state-filter'), stateItems, tr('allStates'));
+  updateSelect($('state-filter'), rawStates, 'All states');
 
   const rawDistricts = [...new Set(records.filter(r => !$('state-filter').value || r.state === $('state-filter').value).map(r => r.district).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-  updateSelect($('district-filter'), rawDistricts, tr('anyDistrict'));
+  updateSelect($('district-filter'), rawDistricts, 'Any district');
   $('district-filter').disabled = !$('state-filter').value;
 
   const combinedCrops = [...new Set([...COMMON_CROPS, ...records.map(r => r.commodity).filter(Boolean)])].sort((a, b) => a.localeCompare(b));
-  $('crops').innerHTML = combinedCrops.map(v => {
-    const t = trCrop(v);
-    const optLabel = (t && t !== v && language !== 'en') ? `${v} (${t})` : v;
-    return `<option value="${esc(v)}">${esc(optLabel)}</option>`;
-  }).join('');
+  $('crops').innerHTML = combinedCrops.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
 }
 
 function displayResults(records) {
   const tbody = $('price-rows');
   const mobile = $('mobile-cards');
   const rawSearch = $('crop-search').value.trim();
-  const searchTitle = rawSearch ? (trCrop(rawSearch) || rawSearch) : tr('resultsTitle');
+  const searchTitle = rawSearch || 'Market reports';
 
   $('results-title').textContent = searchTitle;
-  $('result-count').textContent = `${records.length} ${records.length === 1 ? tr('resultSingular') : tr('resultPlural')}`;
+  $('result-count').textContent = `${records.length} ${records.length === 1 ? 'market report' : 'market reports'}`;
 
   tbody.innerHTML = records.slice(0, 200).map(r => `
     <tr>
-      <td>${formatCrop(r.commodity, r.variety)}</td>
-      <td>${formatLocation(r.market, r.district, r.state)}</td>
+      <td>${esc(r.commodity)} · ${esc(r.variety || 'Other')}</td>
+      <td>${esc(r.market)} Market · ${esc(r.district)}, ${esc(r.state)}</td>
       <td>${esc(formatDate(r.date))}</td>
-      <td class="price">${esc(formatPriceDisplay(r.min))}</td>
-      <td class="price modal-price">${esc(formatPriceDisplay(r.modal))}</td>
-      <td class="price">${esc(formatPriceDisplay(r.max))}</td>
+      <td class="price notranslate">${esc(formatPriceDisplay(r.min))}</td>
+      <td class="price modal-price notranslate">${esc(formatPriceDisplay(r.modal))}</td>
+      <td class="price notranslate">${esc(formatPriceDisplay(r.max))}</td>
     </tr>
   `).join('');
 
   mobile.innerHTML = records.slice(0, 200).map(r => `
     <article class="price-card">
       <div class="price-card-top">
-        <div class="price-card-name">${formatCrop(r.commodity, r.variety)}</div>
+        <div class="price-card-name">${esc(r.commodity)} · ${esc(r.variety || 'Other')}</div>
         <div class="price-card-date">${esc(formatDate(r.date))}</div>
       </div>
-      <div class="price-card-location">${formatLocation(r.market, r.district, r.state)}</div>
+      <div class="price-card-location">${esc(r.market)} Market · ${esc(r.district)}, ${esc(r.state)}</div>
       <div class="price-card-values">
-        <div><span>${esc(tr('thMin'))}</span><strong>${esc(formatPriceDisplay(r.min))}</strong></div>
-        <div class="value-modal"><span>${esc(tr('thModal'))}</span><strong>${esc(formatPriceDisplay(r.modal))}</strong></div>
-        <div><span>${esc(tr('thMax'))}</span><strong>${esc(formatPriceDisplay(r.max))}</strong></div>
+        <div><span>MIN</span><strong class="notranslate">${esc(formatPriceDisplay(r.min))}</strong></div>
+        <div class="value-modal"><span>MODAL PRICE</span><strong class="notranslate">${esc(formatPriceDisplay(r.modal))}</strong></div>
+        <div><span>MAX</span><strong class="notranslate">${esc(formatPriceDisplay(r.max))}</strong></div>
       </div>
     </article>
   `).join('');
@@ -610,15 +229,14 @@ function displayResults(records) {
 
   if (records.length) {
     const d = records.map(r => dateValue(r.date)).filter(Boolean).sort((a, b) => b - a)[0];
-    $('data-freshness').textContent = d ? `${tr('fresh')}: ${formatDate(d)}` : '';
-    $('last-updated').textContent = `${tr('dateUpdated')} ${new Intl.DateTimeFormat(language === 'en' ? 'en-IN' : language === 'hi' ? 'hi-IN' : 'mr-IN', { hour: 'numeric', minute: '2-digit' }).format(new Date())}`;
+    $('data-freshness').textContent = d ? `Latest report: ${formatDate(d)}` : '';
+    $('last-updated').textContent = `Data checked ${new Intl.DateTimeFormat('en-IN', { hour: 'numeric', minute: '2-digit' }).format(new Date())}`;
   }
 
   renderChart(records);
 }
 
 function getRealHistoryPoints(records, selectedCrop) {
-  // 1. Group records from current API response by arrival date
   const byDay = new Map();
   for (const r of records) {
     const d = dateValue(r.date);
@@ -629,7 +247,6 @@ function getRealHistoryPoints(records, selectedCrop) {
     byDay.get(k).push(p);
   }
 
-  // 2. Load accumulated real daily records from localStorage
   const cropKey = (selectedCrop || (records[0]?.commodity) || 'all_commodities').toLowerCase().trim();
   const storageKey = 'vejbhav_real_log_v1';
   let historyStore = {};
@@ -639,7 +256,6 @@ function getRealHistoryPoints(records, selectedCrop) {
 
   if (!historyStore[cropKey]) historyStore[cropKey] = {};
 
-  // Store only 100% genuine daily medians from the API
   for (const [day, prices] of byDay.entries()) {
     const med = prices.sort((a, b) => a - b)[Math.floor(prices.length / 2)];
     historyStore[cropKey][day] = med;
@@ -649,36 +265,32 @@ function getRealHistoryPoints(records, selectedCrop) {
     localStorage.setItem(storageKey, JSON.stringify(historyStore));
   } catch (_) { }
 
-  // Return all authentic records sorted by date
   return Object.entries(historyStore[cropKey])
     .map(([day, value]) => ({ day, value: Number(value) }))
-    .filter(p => Number.isFinite(p.value) && p.value > 0)
+    .filter(p => Number.isFinite(p.value) && p.value >= 10)
     .sort((a, b) => a.day.localeCompare(b.day));
 }
 
 function renderChart(records) {
   const selectedCrop = $('crop-search').value.trim();
-  const resolvedCrop = resolveCommoditySearch(selectedCrop);
-  const activeCropName = resolvedCrop || (records.length ? records[0].commodity : '');
-  const kickerLabel = activeCropName ? `${trCrop(activeCropName)} · ${tr('chartLabel')}` : tr('chartLabel');
+  const activeCropName = selectedCrop || (records.length ? records[0].commodity : '');
+  const kickerLabel = activeCropName ? `${activeCropName} · MODAL PRICE · ₹ / QUINTAL` : 'MODAL PRICE · ₹ / QUINTAL';
 
   const kickerEl = $('chart-kicker');
   if (kickerEl) kickerEl.textContent = kickerLabel;
 
   if (!records.length) {
-    $('chart-area').innerHTML = `<div class="chart-empty">${esc(tr('chartEmpty'))}</div>`;
+    $('chart-area').innerHTML = `<div class="chart-empty">Price history will appear here when real reports are available.</div>`;
     $('chart-latest').textContent = '—';
-    $('chart-period').textContent = tr('chartAwait');
+    $('chart-period').textContent = 'Waiting for market data';
     return;
   }
 
   const points = getRealHistoryPoints(records, activeCropName);
 
-  // If only 1 single arrival date is available, display Today's Authentic Price Spread
   if (points.length <= 1) {
     const single = points[0] || { day: records[0]?.date, value: Number(records[0]?.modal) };
-    // Filter realistic commercial mandi rates (at least ₹10/quintal)
-    // to discard clerk placeholder 0s, empty fields, or nominal fractions
+
     const validModals = records.map(r => Number(r.modal)).filter(p => Number.isFinite(p) && p >= 10);
     const validMins = records.map(r => Number(r.min)).filter(p => Number.isFinite(p) && p >= 10);
     const validMaxs = records.map(r => Number(r.max)).filter(p => Number.isFinite(p) && p >= 10);
@@ -687,40 +299,39 @@ function renderChart(records) {
     const rawMin = validMins.length ? Math.min(...validMins) : modalVal;
     const rawMax = validMaxs.length ? Math.max(...validMaxs) : modalVal;
 
-    // Ensure logical bounds: min <= modal <= max
     const minVal = Math.min(rawMin, modalVal || rawMin);
     const maxVal = Math.max(rawMax, modalVal || rawMax);
 
     $('chart-latest').textContent = modalVal ? `₹${formatPrice(modalVal)}` : '—';
-    $('chart-period').textContent = `1 ${tr('chartOneDay')} (${formatDate(single.day)})`;
+    $('chart-period').textContent = `1 report day shown (${formatDate(single.day)})`;
 
     const spreadPercent = maxVal > minVal ? Math.min(Math.max(((modalVal - minVal) / (maxVal - minVal)) * 100, 15), 85) : 50;
 
     $('chart-area').innerHTML = `
       <div class="single-day-spread">
         <div class="spread-header">
-          <span class="spread-date">📅 ${esc(formatDate(single.day))} · ${esc(language === 'hi' ? 'आज का सरकारी भाव दायरा' : language === 'mr' ? 'आजची अधिकृत भाव कक्षा' : "Today's Mandi Price Range")}</span>
-          <span class="spread-mandis">${records.length} ${records.length === 1 ? tr('resultSingular') : tr('resultPlural')}</span>
+          <span class="spread-date">📅 ${esc(formatDate(single.day))} · Today's Mandi Price Range</span>
+          <span class="spread-mandis">${records.length} ${records.length === 1 ? 'market report' : 'market reports'}</span>
         </div>
 
         <div class="spread-stats-grid">
           <div class="spread-stat-card stat-min">
-            <span class="stat-type">${esc(tr('thMin'))}</span>
-            <strong class="stat-amt">₹${esc(formatPrice(minVal))}</strong>
-            <span class="stat-sub">${language === 'hi' ? 'न्यूनतम रिपोर्ट' : language === 'mr' ? 'किमान अहवाल' : 'Lowest reported'}</span>
+            <span class="stat-type">MIN</span>
+            <strong class="stat-amt notranslate">₹${esc(formatPrice(minVal))}</strong>
+            <span class="stat-sub">Lowest reported</span>
           </div>
 
           <div class="spread-stat-card stat-modal">
-            <span class="stat-badge">${language === 'hi' ? 'मुख्य मंडी भाव' : language === 'mr' ? 'मुख्य बाजारभाव' : 'Benchmark Modal Rate'}</span>
-            <span class="stat-type">${esc(tr('thModal'))}</span>
-            <strong class="stat-amt modal-highlight">₹${esc(formatPrice(modalVal))}</strong>
-            <span class="stat-sub">${language === 'hi' ? 'अधिकांश मंडियों का भाव' : language === 'mr' ? 'बहुतांश बाजारांतील भाव' : 'Most common rate'}</span>
+            <span class="stat-badge">Benchmark Modal Rate</span>
+            <span class="stat-type">MODAL PRICE</span>
+            <strong class="stat-amt modal-highlight notranslate">₹${esc(formatPrice(modalVal))}</strong>
+            <span class="stat-sub">Most common rate</span>
           </div>
 
           <div class="spread-stat-card stat-max">
-            <span class="stat-type">${esc(tr('thMax'))}</span>
-            <strong class="stat-amt">₹${esc(formatPrice(maxVal))}</strong>
-            <span class="stat-sub">${language === 'hi' ? 'अधिकतम रिपोर्ट' : language === 'mr' ? 'कमाल अहवाल' : 'Highest reported'}</span>
+            <span class="stat-type">MAX</span>
+            <strong class="stat-amt notranslate">₹${esc(formatPrice(maxVal))}</strong>
+            <span class="stat-sub">Highest reported</span>
           </div>
         </div>
 
@@ -732,18 +343,14 @@ function renderChart(records) {
             </div>
           </div>
           <div class="spread-bar-ends">
-            <span>₹${esc(formatPrice(minVal))} (${esc(tr('thMin'))})</span>
-            <span class="spread-modal-legend">● ${esc(tr('thModal'))}: ₹${esc(formatPrice(modalVal))}</span>
-            <span>₹${esc(formatPrice(maxVal))} (${esc(tr('thMax'))})</span>
+            <span class="notranslate">₹${esc(formatPrice(minVal))} (MIN)</span>
+            <span class="spread-modal-legend notranslate">● MODAL: ₹${esc(formatPrice(modalVal))}</span>
+            <span class="notranslate">₹${esc(formatPrice(maxVal))} (MAX)</span>
           </div>
         </div>
 
         <p class="spread-footer-note">
-          ${language === 'hi'
-        ? '✓ यह आधिकारिक AGMARKNET का 100% असली डेटा है। सरकारी मंडी रिपोर्ट रोज़ एक बार आती हैं; जैसे-जैसे अगले दिनों के असली भाव आएँगे, वे यहाँ तारीख-दर-तारीख जुड़ते जाएँगे।'
-        : language === 'mr'
-          ? '✓ हा AGMARKNET चा १००% खरा अधिकृत डेटा आहे. सरकारी बाजार अहवाल रोज एकदा प्रसिद्ध होतात; पुढील दिवसांचे खरे भाव येताच ते येथे नोंदवले जातील.'
-          : '✓ 100% authentic AGMARKNET government report. Mandi reports are published once daily; historical trend lines connect real daily reports as they accumulate.'}
+          ✓ 100% authentic AGMARKNET government report. Mandi reports are published once daily; historical trend lines connect real daily reports as they accumulate.
         </p>
       </div>
     `;
@@ -752,7 +359,7 @@ function renderChart(records) {
 
   // If 2 or more genuine daily dates exist, plot the authentic trend line
   $('chart-latest').textContent = `₹${formatPrice(points.at(-1).value)}`;
-  $('chart-period').textContent = `${points.length} ${tr('chartDays')}`;
+  $('chart-period').textContent = `${points.length} report days shown`;
 
   const width = 900;
   const height = 185;
@@ -784,7 +391,7 @@ function renderChart(records) {
   }).join('');
 
   $('chart-area').innerHTML = `
-    <svg viewBox="0 0 ${width} ${height + 8}" preserveAspectRatio="none" role="img" aria-label="${esc(tr('chartLegend'))}">
+    <svg viewBox="0 0 ${width} ${height + 8}" preserveAspectRatio="none" role="img" aria-label="Daily median across matching markets">
       <defs>
         <linearGradient id="priceFill" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stop-color="#79a375" stop-opacity=".25"/>
@@ -800,12 +407,12 @@ function renderChart(records) {
 }
 
 async function loadPrices({ force = false } = {}) {
-  setStatus('', tr('statusLoading'));
+  setStatus('', 'Loading official AGMARKNET prices…');
   $('refresh').disabled = true;
   try {
     const state = $('state-filter').value;
     const rawCrop = $('crop-search').value.trim();
-    const resolvedCrop = resolveCommoditySearch(rawCrop);
+    const resolvedCrop = await resolveCommoditySearch(rawCrop);
 
     let records = await getRecords({
       ...(state ? { state } : {}),
@@ -813,7 +420,6 @@ async function loadPrices({ force = false } = {}) {
     });
 
     if (!records.length && resolvedCrop) {
-      // Fallback to broader state/national query if specific exact commodity filter returned 0
       records = await getRecords({ ...(state ? { state } : {}) });
     }
 
@@ -822,16 +428,15 @@ async function loadPrices({ force = false } = {}) {
     const chosen = selectedRecords();
     latestRecords = chosen;
     displayResults(chosen);
-    setStatus('connected', chosen.length ? tr('statusConnected') : tr('statusNoResults'));
+    setStatus('connected', chosen.length ? 'Connected to official AGMARKNET reports' : 'No matching reports found in available data.');
   } catch (e) {
-    const msg = tr('statusError');
-    setStatus('error', msg);
+    setStatus('error', 'Could not load official data. Please refresh or try again later.');
     $('empty-state').classList.remove('hidden');
     $('results').classList.add('hidden');
     const histEl = $('history');
     if (histEl) histEl.classList.add('hidden');
-    $('chart-period').textContent = tr('chartAwait');
-    $('chart-area').innerHTML = `<div class="chart-empty">${esc(tr('chartEmpty'))}</div>`;
+    $('chart-period').textContent = 'Waiting for market data';
+    $('chart-area').innerHTML = `<div class="chart-empty">Price history will appear here when real reports are available.</div>`;
   } finally {
     $('refresh').disabled = false;
   }
@@ -845,20 +450,16 @@ function applyFilters() {
   const filtered = selectedRecords();
   latestRecords = filtered;
   displayResults(filtered);
-  setStatus('connected', filtered.length ? tr('statusConnected') : tr('statusNoResults'));
+  setStatus('connected', filtered.length ? 'Connected to official AGMARKNET reports' : 'No matching reports found in available data.');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  $('language').value = language;
-  applyLanguage();
+  // Setup Google Translate Language Selection
+  const initialLang = localStorage.getItem(langStore) || getGoogleCookieLang() || 'en';
+  $('language').value = initialLang;
 
   $('language').addEventListener('change', e => {
-    language = e.target.value;
-    localStorage.setItem(langStore, language);
-    applyLanguage();
-    if (allRecords.length) {
-      displayResults(selectedRecords());
-    }
+    setGoogleTranslateLanguage(e.target.value);
   });
 
   $('refresh').addEventListener('click', () => loadPrices({ force: true }));
@@ -873,11 +474,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Instant local filtering while typing
   $('crop-search').addEventListener('input', () => {
-    const rawVal = $('crop-search').value.trim();
-    const resolved = resolveCommoditySearch(rawVal).toLowerCase();
+    const rawVal = $('crop-search').value.trim().toLowerCase();
     document.querySelectorAll('.chip').forEach(c => {
       const cCrop = (c.dataset.crop || '').toLowerCase();
-      c.classList.toggle('active', cCrop === resolved || (!rawVal && !cCrop));
+      c.classList.toggle('active', cCrop === rawVal || (!rawVal && !cCrop));
     });
     if (allRecords.length) applyFilters();
   });
@@ -888,10 +488,9 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
       const cropVal = btn.dataset.crop || '';
-      $('crop-search').value = cropVal ? (trCrop(cropVal) || cropVal) : '';
+      $('crop-search').value = cropVal;
       loadPrices();
 
-      // Smoothly ensure the Price Range Card is in clear view right under the chips
       const hist = $('history');
       if (hist) {
         const rect = hist.getBoundingClientRect();
