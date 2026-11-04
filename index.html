@@ -88,16 +88,70 @@
             <option value="">Any district</option>
           </select></label><button class="search-button" id="search-button">See prices
           <span>→</span></button></div>
-      <div class="crop-chips" id="crop-chips" aria-label="Quick vegetable filters">
-        <button type="button" class="chip active" data-crop="">All Vegetables</button>
-        <button type="button" class="chip" data-crop="Potato">🥔 Potato</button>
-        <button type="button" class="chip" data-crop="Tomato">🍅 Tomato</button>
-        <button type="button" class="chip" data-crop="Onion">🧅 Onion</button>
-        <button type="button" class="chip" data-crop="Green Chilli">🌶️ Chilli</button>
-        <button type="button" class="chip" data-crop="Brinjal">🍆 Brinjal</button>
-        <button type="button" class="chip" data-crop="Garlic">🧄 Garlic</button>
-        <button type="button" class="chip" data-crop="Cabbage">🥬 Cabbage</button>
-        <button type="button" class="chip" data-crop="Cauliflower">🥦 Cauliflower</button>
+      <div class="category-tabs" role="tablist" aria-label="Commodity categories">
+        <button type="button" class="cat-tab active" data-category="all">All Produce</button>
+        <button type="button" class="cat-tab" data-category="veg">🥬 Vegetables</button>
+        <button type="button" class="cat-tab" data-category="fruit">🍎 Fruits</button>
+      </div>
+      <div class="crop-chips" id="crop-chips" aria-label="Quick commodity filters">
+        <button type="button" class="chip active" data-crop="" data-category="all">All Items</button>
+
+        <!-- Vegetables -->
+        <button type="button" class="chip" data-crop="Potato" data-category="veg">🥔 Potato</button>
+        <button type="button" class="chip" data-crop="Tomato" data-category="veg">🍅 Tomato</button>
+        <button type="button" class="chip" data-crop="Onion" data-category="veg">🧅 Onion</button>
+        <button type="button" class="chip" data-crop="Green Chilli" data-category="veg">🌶️ Green Chilli</button>
+        <button type="button" class="chip" data-crop="Brinjal" data-category="veg">🍆 Brinjal</button>
+        <button type="button" class="chip" data-crop="Garlic" data-category="veg">🧄 Garlic</button>
+        <button type="button" class="chip" data-crop="Ginger(Green)" data-category="veg">🫚 Ginger</button>
+        <button type="button" class="chip" data-crop="Carrot" data-category="veg">🥕 Carrot</button>
+        <button type="button" class="chip" data-crop="Cabbage" data-category="veg">🥬 Cabbage</button>
+        <button type="button" class="chip" data-crop="Cauliflower" data-category="veg">🥦 Cauliflower</button>
+        <button type="button" class="chip" data-crop="Cucumbar(Kheera)" data-category="veg">🥒 Cucumber</button>
+        <button type="button" class="chip" data-crop="Capsicum" data-category="veg">🫑 Capsicum</button>
+        <button type="button" class="chip" data-crop="Spinach" data-category="veg">🌿 Spinach (Palak)</button>
+        <button type="button" class="chip" data-crop="Green Peas" data-category="veg">🟢 Peas</button>
+        <button type="button" class="chip" data-crop="Bhindi(Ladies Finger)" data-category="veg">🫛 Bhindi (Okra)</button>
+        <button type="button" class="chip" data-crop="Bottle gourd" data-category="veg">🥣 Bottle Gourd</button>
+        <button type="button" class="chip" data-crop="Bitter gourd" data-category="veg">🥒 Bitter Gourd</button>
+        <button type="button" class="chip" data-crop="Pumpkin" data-category="veg">🎃 Pumpkin</button>
+        <button type="button" class="chip" data-crop="Raddish" data-category="veg">🥢 Radish</button>
+        <button type="button" class="chip" data-crop="Beetroot" data-category="veg">🔴 Beetroot</button>
+        <button type="button" class="chip" data-crop="Coriander(Leaves)" data-category="veg">🌿 Coriander</button>
+        <button type="button" class="chip" data-crop="Methi(Leaves)" data-category="veg">🍃 Methi</button>
+        <button type="button" class="chip" data-crop="Mint(Pudina)" data-category="veg">🍃 Mint</button>
+        <button type="button" class="chip" data-crop="Drumstick" data-category="veg">🥁 Drumstick</button>
+        <button type="button" class="chip" data-crop="Sweet Potato" data-category="veg">🍠 Sweet Potato</button>
+        <button type="button" class="chip" data-crop="Mushroom" data-category="veg">🍄 Mushroom</button>
+        <button type="button" class="chip" data-crop="Sweet Corn " data-category="veg">🌽 Sweet Corn</button>
+        <button type="button" class="chip" data-crop="Lemon" data-category="veg">🍋 Lemon</button>
+        <button type="button" class="chip" data-crop="Ashgourd" data-category="veg">🍈 Ashgourd</button>
+        <button type="button" class="chip" data-crop="Ridgeguard(Tori)" data-category="veg">🥒 Ridge Gourd</button>
+        <button type="button" class="chip" data-crop="Elephant Yam(Suran)/Amorphophallus" data-category="veg">🥔 Suran / Yam</button>
+        <button type="button" class="chip" data-crop="Little gourd(Kundru)" data-category="veg">🥬 Kundru</button>
+        <button type="button" class="chip" data-crop="Cluster beans" data-category="veg">🫘 Cluster Beans</button>
+        <button type="button" class="chip" data-crop="Cowpea(Veg)" data-category="veg">🥗 Cowpea</button>
+
+        <!-- Fruits -->
+        <button type="button" class="chip" data-crop="Apple" data-category="fruit">🍎 Apple</button>
+        <button type="button" class="chip" data-crop="Banana" data-category="fruit">🍌 Banana</button>
+        <button type="button" class="chip" data-crop="Mango(Raw-Ripe)" data-category="fruit">🥭 Mango</button>
+        <button type="button" class="chip" data-crop="Orange" data-category="fruit">🍊 Orange</button>
+        <button type="button" class="chip" data-crop="Mousambi(Sweet Lime)" data-category="fruit">🍈 Mosambi</button>
+        <button type="button" class="chip" data-crop="Grapes" data-category="fruit">🍇 Grapes</button>
+        <button type="button" class="chip" data-crop="Water Melon" data-category="fruit">🍉 Watermelon</button>
+        <button type="button" class="chip" data-crop="Papaya" data-category="fruit">🍈 Papaya</button>
+        <button type="button" class="chip" data-crop="Pineapple" data-category="fruit">🍍 Pineapple</button>
+        <button type="button" class="chip" data-crop="Coconut" data-category="fruit">🥥 Coconut</button>
+        <button type="button" class="chip" data-crop="Guava" data-category="fruit">🍐 Guava</button>
+        <button type="button" class="chip" data-crop="Pomegranate" data-category="fruit">🌰 Pomegranate</button>
+        <button type="button" class="chip" data-crop="Chikoos(Sapota)" data-category="fruit">🍈 Chikoo</button>
+        <button type="button" class="chip" data-crop="Karbuja(Musk Melon)" data-category="fruit">🍈 Muskmelon</button>
+        <button type="button" class="chip" data-crop="Custard Apple(Sharifa)" data-category="fruit">🍈 Custard Apple</button>
+        <button type="button" class="chip" data-crop="Amla(Nelli Kai)" data-category="fruit">🟢 Amla</button>
+        <button type="button" class="chip" data-crop="Kinnow" data-category="fruit">🍊 Kinnow</button>
+        <button type="button" class="chip" data-crop="Strawberry" data-category="fruit">🍓 Strawberry</button>
+        <button type="button" class="chip" data-crop="Tender Coconut" data-category="fruit">🥥 Tender Coconut</button>
       </div>
       <div class="notice-row">
         <div class="source-status"><span class="status-dot" id="status-dot"></span><span id="status-text">Loading official AGMARKNET prices…</span></div><span

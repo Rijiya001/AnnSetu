@@ -1,27 +1,107 @@
 const langStore = 'vejbhaav.language';
 
-// Fast search mapper for common regional names to AGMARKNET English commodities
+// Comprehensive search mapper for common regional names & variants to AGMARKNET English commodities
 const CROP_SEARCH_MAP = {
-  // Hindi, Marathi, Gujarati, Punjabi, Bengali, Tamil, Telugu, Kannada, Malayalam
-  'आलू': 'Potato', 'बटाटा': 'Potato', 'બટાટા': 'Potato', 'আলু': 'Potato', 'ਆਲੂ': 'Potato', 'உருளைக்கிழங்கு': 'Potato', 'బంగాళాదుంప': 'Potato', 'ಆಲೂಗಡ್ಡೆ': 'Potato',
-  'टमाटर': 'Tomato', 'टोमॅटो': 'Tomato', 'ટામેટા': 'Tomato', 'টমেটো': 'Tomato', 'ਟਮਾਟਰ': 'Tomato', 'தக்காளி': 'Tomato', 'టమోటా': 'Tomato', 'ಟೊಮೆಟೊ': 'Tomato', 'തക്കാളി': 'Tomato',
-  'प्याज': 'Onion', 'कांदा': 'Onion', 'ડુંગળી': 'Onion', 'পেঁয়াজ': 'Onion', 'ਪਿਆਜ਼': 'Onion', 'வெங்காயம்': 'Onion', 'ఉల్లిపాయ': 'Onion', 'ಈರುಳ್ಳಿ': 'Onion', 'സവാള': 'Onion',
-  'मिर्च': 'Chilli', 'हरी मिर्च': 'Green Chilli', 'हिरवी मिरची': 'Green Chilli', 'લીલા મરચા': 'Green Chilli', 'কাঁচা মরিচ': 'Green Chilli', 'பச்சை மிளகாய்': 'Green Chilli', 'పచ్చిమిర్చి': 'Green Chilli',
-  'बैंगन': 'Brinjal', 'वांगी': 'Brinjal', 'રીંગણ': 'Brinjal', 'বেগুন': 'Brinjal', 'ਬੈਂਗਣ': 'Brinjal', 'கத்தரிக்காய்': 'Brinjal', 'వంకాయ': 'Brinjal', 'ಬದನೆಕಾಯಿ': 'Brinjal',
-  'लहसुन': 'Garlic', 'लसूण': 'Garlic', 'લસણ': 'Garlic', 'রসুন': 'Garlic', 'ਲਸਣ': 'Garlic', 'பூண்டு': 'Garlic', 'వెల్లుల్లి': 'Garlic', 'ಬೆಳ್ಳುಳ್ಳಿ': 'Garlic',
-  'अदरक': 'Ginger', 'आले': 'Ginger', 'આદુ': 'Ginger', 'আদা': 'Ginger', 'ਅਦਰਕ': 'Ginger', 'இஞ்சி': 'Ginger', 'అల్లం': 'Ginger', 'ಶುಂಠಿ': 'Ginger',
-  'पत्तागोभी': 'Cabbage', 'कोबी': 'Cabbage', 'કોબીજ': 'Cabbage', 'বাঁধাকপি': 'Cabbage', 'ਬੰਦਗੋਭੀ': 'Cabbage', 'முட்டைக்கோஸ்': 'Cabbage', 'క్యాబేజీ': 'Cabbage',
-  'फूलगोभी': 'Cauliflower', 'फ्लॉवर': 'Cauliflower', 'ફૂલકોબી': 'Cauliflower', 'ফুলকপি': 'Cauliflower', 'ਕੌਲੀਫਲਾਵਰ': 'Cauliflower', 'காலிஃபிளவர்': 'Cauliflower',
-  'केला': 'Banana', 'केळी': 'Banana', 'કેળા': 'Banana', 'কলা': 'Banana', 'ਕੇਲਾ': 'Banana', 'வாழைப்பழம்': 'Banana', 'అరటి': 'Banana', 'ಬಾಳೆಹಣ್ಣು': 'Banana'
+  // English synonyms & variants
+  'potato': 'Potato', 'potatoes': 'Potato', 'alu': 'Potato', 'aloo': 'Potato',
+  'tomato': 'Tomato', 'tomatoes': 'Tomato', 'tamatar': 'Tomato',
+  'onion': 'Onion', 'onions': 'Onion', 'pyaz': 'Onion', 'pyaaz': 'Onion',
+  'chilli': 'Green Chilli', 'chili': 'Green Chilli', 'mirchi': 'Green Chilli', 'green chilli': 'Green Chilli', 'green chili': 'Green Chilli', 'red chilli': 'Chili Red', 'red chili': 'Chili Red',
+  'brinjal': 'Brinjal', 'eggplant': 'Brinjal', 'baingan': 'Brinjal', 'aubergine': 'Brinjal',
+  'garlic': 'Garlic', 'lahsun': 'Garlic', 'lehsun': 'Garlic',
+  'ginger': 'Ginger(Green)', 'adrak': 'Ginger(Green)',
+  'cabbage': 'Cabbage', 'patta gobhi': 'Cabbage', 'band gobhi': 'Cabbage',
+  'cauliflower': 'Cauliflower', 'phool gobhi': 'Cauliflower', 'gobhi': 'Cauliflower',
+  'carrot': 'Carrot', 'gajar': 'Carrot',
+  'cucumber': 'Cucumbar(Kheera)', 'cucumbar': 'Cucumbar(Kheera)', 'kheera': 'Cucumbar(Kheera)', 'kakdi': 'Cucumbar(Kheera)',
+  'capsicum': 'Capsicum', 'bell pepper': 'Capsicum', 'shimla mirch': 'Capsicum',
+  'spinach': 'Spinach', 'palak': 'Spinach',
+  'peas': 'Green Peas', 'green peas': 'Green Peas', 'matar': 'Green Peas', 'peas wet': 'Peas Wet',
+  'bhindi': 'Bhindi(Ladies Finger)', 'okra': 'Bhindi(Ladies Finger)', 'ladies finger': 'Bhindi(Ladies Finger)', 'lady finger': 'Bhindi(Ladies Finger)',
+  'bottle gourd': 'Bottle gourd', 'lauki': 'Bottle gourd', 'doodhi': 'Bottle gourd', 'dudhi': 'Bottle gourd',
+  'bitter gourd': 'Bitter gourd', 'karela': 'Bitter gourd',
+  'pumpkin': 'Pumpkin', 'kaddu': 'Pumpkin',
+  'radish': 'Raddish', 'raddish': 'Raddish', 'mooli': 'Raddish', 'moli': 'Raddish',
+  'beetroot': 'Beetroot', 'chukandar': 'Beetroot',
+  'coriander': 'Coriander(Leaves)', 'dhania': 'Coriander(Leaves)', 'dhaniya': 'Coriander(Leaves)', 'kothmir': 'Coriander(Leaves)',
+  'methi': 'Methi(Leaves)', 'fenugreek': 'Methi(Leaves)',
+  'mint': 'Mint(Pudina)', 'pudina': 'Mint(Pudina)',
+  'drumstick': 'Drumstick', 'sahjan': 'Drumstick', 'moringa': 'Drumstick', 'saragvo': 'Drumstick',
+  'sweet potato': 'Sweet Potato', 'shakarkand': 'Sweet Potato',
+  'mushroom': 'Mushroom',
+  'sweet corn': 'Sweet Corn ', 'corn': 'Sweet Corn ', 'makka': 'Sweet Corn ', 'bhutta': 'Sweet Corn ',
+  'lemon': 'Lemon', 'lime': 'Lime', 'nimbu': 'Lemon',
+  'ashgourd': 'Ashgourd', 'petha': 'Ashgourd',
+  'ridge gourd': 'Ridgeguard(Tori)', 'ridgeguard': 'Ridgeguard(Tori)', 'tori': 'Ridgeguard(Tori)', 'turai': 'Ridgeguard(Tori)',
+  'yam': 'Elephant Yam(Suran)/Amorphophallus', 'suran': 'Elephant Yam(Suran)/Amorphophallus', 'jimikand': 'Elephant Yam(Suran)/Amorphophallus',
+  'kundru': 'Little gourd(Kundru)', 'tindora': 'Little gourd(Kundru)', 'tindoora': 'Little gourd(Kundru)',
+  'cluster beans': 'Cluster beans', 'guar': 'Cluster beans', 'gawar': 'Cluster beans',
+  'cowpea': 'Cowpea(Veg)', 'lobia': 'Cowpea(Veg)', 'chawli': 'Cowpea(Veg)',
+
+  // Fruits
+  'apple': 'Apple', 'seb': 'Apple',
+  'banana': 'Banana', 'kela': 'Banana', 'green banana': 'Banana - Green',
+  'mango': 'Mango(Raw-Ripe)', 'aam': 'Mango(Raw-Ripe)',
+  'orange': 'Orange', 'santra': 'Orange', 'narangi': 'Orange',
+  'mosambi': 'Mousambi(Sweet Lime)', 'sweet lime': 'Mousambi(Sweet Lime)', 'mousambi': 'Mousambi(Sweet Lime)',
+  'grapes': 'Grapes', 'angoor': 'Grapes',
+  'watermelon': 'Water Melon', 'water melon': 'Water Melon', 'tarbooj': 'Water Melon', 'tarbuj': 'Water Melon',
+  'papaya': 'Papaya', 'papita': 'Papaya',
+  'pineapple': 'Pineapple', 'ananas': 'Pineapple',
+  'coconut': 'Coconut', 'nariyal': 'Coconut', 'tender coconut': 'Tender Coconut',
+  'guava': 'Guava', 'amrood': 'Guava', 'amrud': 'Guava', 'peru': 'Guava',
+  'pomegranate': 'Pomegranate', 'anar': 'Pomegranate',
+  'chikoo': 'Chikoos(Sapota)', 'chiku': 'Chikoos(Sapota)', 'sapota': 'Chikoos(Sapota)',
+  'muskmelon': 'Karbuja(Musk Melon)', 'musk melon': 'Karbuja(Musk Melon)', 'kharbuja': 'Karbuja(Musk Melon)',
+  'custard apple': 'Custard Apple(Sharifa)', 'sitaphal': 'Custard Apple(Sharifa)', 'sharifa': 'Custard Apple(Sharifa)',
+  'amla': 'Amla(Nelli Kai)',
+  'kinnow': 'Kinnow',
+  'strawberry': 'Strawberry',
+  'pear': 'Pear', 'nashpati': 'Pear',
+  'jackfruit': 'Jackfruit', 'kathal': 'Jackfruit',
+
+  // Hindi
+  'आलू': 'Potato', 'टमाटर': 'Tomato', 'प्याज': 'Onion', 'हरी मिर्च': 'Green Chilli', 'मिर्च': 'Green Chilli', 'बैंगन': 'Brinjal', 'लहसुन': 'Garlic', 'अदरक': 'Ginger(Green)', 'पत्तागोभी': 'Cabbage', 'फूलगोभी': 'Cauliflower', 'गाजर': 'Carrot', 'खीरा': 'Cucumbar(Kheera)', 'शिमला मिर्च': 'Capsicum', 'पालक': 'Spinach', 'मटर': 'Green Peas', 'भिंडी': 'Bhindi(Ladies Finger)', 'लौकी': 'Bottle gourd', 'करेला': 'Bitter gourd', 'कद्दू': 'Pumpkin', 'मूली': 'Raddish', 'चुकंदर': 'Beetroot', 'धनिया': 'Coriander(Leaves)', 'मेथी': 'Methi(Leaves)', 'पुदीना': 'Mint(Pudina)', 'सहजन': 'Drumstick', 'शकरकंद': 'Sweet Potato', 'मशरूम': 'Mushroom', 'नींबू': 'Lemon', 'तोरई': 'Ridgeguard(Tori)', 'सूरन': 'Elephant Yam(Suran)/Amorphophallus', 'कुंदरू': 'Little gourd(Kundru)', 'ग्वार': 'Cluster beans', 'सेब': 'Apple', 'केला': 'Banana', 'आम': 'Mango(Raw-Ripe)', 'संतरा': 'Orange', 'मौसमी': 'Mousambi(Sweet Lime)', 'अंगूर': 'Grapes', 'तरबूज': 'Water Melon', 'पपीता': 'Papaya', 'अनानास': 'Pineapple', 'नारियल': 'Coconut', 'अमरूद': 'Guava', 'अनार': 'Pomegranate', 'चीकू': 'Chikoos(Sapota)', 'खरबूजा': 'Karbuja(Musk Melon)', 'सीताफल': 'Custard Apple(Sharifa)', 'आंवला': 'Amla(Nelli Kai)', 'स्ट्रॉबेरी': 'Strawberry',
+
+  // Gujarati
+  'બટાટા': 'Potato', 'ટામેટા': 'Tomato', 'ડુંગળી': 'Onion', 'લીલા મરચા': 'Green Chilli', 'રીંગણ': 'Brinjal', 'લસણ': 'Garlic', 'આદુ': 'Ginger(Green)', 'કોબીજ': 'Cabbage', 'ફૂલકોબી': 'Cauliflower', 'ગાજર': 'Carrot', 'કાકડી': 'Cucumbar(Kheera)', 'સિમલા મરચા': 'Capsicum', 'પાલક': 'Spinach', 'વટાણા': 'Green Peas', 'ભીંડા': 'Bhindi(Ladies Finger)', 'દૂધી': 'Bottle gourd', 'કારેલા': 'Bitter gourd', 'કોળું': 'Pumpkin', 'મૂળા': 'Raddish', 'કોથમીર': 'Coriander(Leaves)', 'મેથી': 'Methi(Leaves)', 'ફુદીનો': 'Mint(Pudina)', 'સરગવો': 'Drumstick', 'શક્કરિયા': 'Sweet Potato', 'લીંબુ': 'Lemon', 'તુરીયા': 'Ridgeguard(Tori)', 'સૂરણ': 'Elephant Yam(Suran)/Amorphophallus', 'ટીંડોરા': 'Little gourd(Kundru)', 'ગુવાર': 'Cluster beans', 'સફરજન': 'Apple', 'કેળા': 'Banana', 'કેરી': 'Mango(Raw-Ripe)', 'નારંગી': 'Orange', 'મોસંબી': 'Mousambi(Sweet Lime)', 'દ્રાક્ષ': 'Grapes', 'તડબૂચ': 'Water Melon', 'પપૈયું': 'Papaya', 'અનાનસ': 'Pineapple', 'નાળિયેર': 'Coconut', 'જામફળ': 'Guava', 'દાડમ': 'Pomegranate', 'ચીકુ': 'Chikoos(Sapota)', 'ટેટી': 'Karbuja(Musk Melon)', 'સીતાફળ': 'Custard Apple(Sharifa)', 'આમળા': 'Amla(Nelli Kai)',
+
+  // Marathi
+  'बटाटा': 'Potato', 'टोमॅटो': 'Tomato', 'कांदा': 'Onion', 'हिरवी मिरची': 'Green Chilli', 'वांगी': 'Brinjal', 'लसूण': 'Garlic', 'आले': 'Ginger(Green)', 'कोबी': 'Cabbage', 'फ्लॉवर': 'Cauliflower', 'गाजर': 'Carrot', 'काकडी': 'Cucumbar(Kheera)', 'ढोबळी मिरची': 'Capsicum', 'पालक': 'Spinach', 'मटार': 'Green Peas', 'भेंडी': 'Bhindi(Ladies Finger)', 'दुधी': 'Bottle gourd', 'कारले': 'Bitter gourd', 'भोपळा': 'Pumpkin', 'मुळा': 'Raddish', 'कोथिंबीर': 'Coriander(Leaves)', 'मेथी': 'Methi(Leaves)', 'पुदिना': 'Mint(Pudina)', 'शेवगा': 'Drumstick', 'रताळे': 'Sweet Potato', 'लिंबू': 'Lemon', 'दोडका': 'Ridgeguard(Tori)', 'सफरचंद': 'Apple', 'केळी': 'Banana', 'आंबा': 'Mango(Raw-Ripe)', 'संत्रे': 'Orange', 'मोसंबी': 'Mousambi(Sweet Lime)', 'द्राक्षे': 'Grapes', 'कलिंगड': 'Water Melon', 'पपई': 'Papaya', 'अननस': 'Pineapple', 'नारळ': 'Coconut', 'पेरू': 'Guava', 'डाळिंब': 'Pomegranate', 'चिकू': 'Chikoos(Sapota)', 'सीताफळ': 'Custard Apple(Sharifa)', 'आवळा': 'Amla(Nelli Kai)',
+
+  // Bengali, Punjabi, Tamil, Telugu, Kannada, Malayalam...
+  'আলু': 'Potato', 'টমেটো': 'Tomato', 'পেঁয়াজ': 'Onion', 'কাঁচা মরিচ': 'Green Chilli', 'বেগুন': 'Brinjal', 'রসুন': 'Garlic', 'আদা': 'Ginger(Green)', 'বাঁধাকপি': 'Cabbage', 'ফুলকপি': 'Cauliflower', 'কলা': 'Banana', 'আম': 'Mango(Raw-Ripe)', 'আপেল': 'Apple', 'কমলা': 'Orange', 'আঙুর': 'Grapes', 'তরমুজ': 'Water Melon',
+  'ਆਲੂ': 'Potato', 'ਟਮਾਟਰ': 'Tomato', 'ਪਿਆਜ਼': 'Onion', 'ਬੈਂਗਣ': 'Brinjal', 'ਲਸਣ': 'Garlic', 'ਅਦਰਕ': 'Ginger(Green)', 'ਬੰਦਗੋਭੀ': 'Cabbage', 'ਕੌਲੀਫਲਾਵਰ': 'Cauliflower', 'ਕੇਲਾ': 'Banana', 'ਅੰਬ': 'Mango(Raw-Ripe)', 'ਸੇਬ': 'Apple', 'ਸੰਤਰਾ': 'Orange', 'ਅੰਗੂਰ': 'Grapes', 'ਤਰਬੂਜ਼': 'Water Melon',
+  'உருளைக்கிழங்கு': 'Potato', 'தக்காளி': 'Tomato', 'வெங்காயம்': 'Onion', 'பச்சை மிளகாய்': 'Green Chilli', 'கத்தரிக்காய்': 'Brinjal', 'பூண்டு': 'Garlic', 'இஞ்சி': 'Ginger(Green)', 'முட்டைக்கோஸ்': 'Cabbage', 'வாழைப்பழம்': 'Banana', 'மாம்பழம்': 'Mango(Raw-Ripe)', 'ஆப்பிள்': 'Apple', 'ஆரஞ்சு': 'Orange', 'திராட்சை': 'Grapes', 'தர்பூசணி': 'Water Melon',
+  'బంగాళాదుంప': 'Potato', 'టమోటా': 'Tomato', 'ఉల్లిపాయ': 'Onion', 'పచ్చిమిర్చి': 'Green Chilli', 'వంకాయ': 'Brinjal', 'వెల్లుల్లి': 'Garlic', 'అల్లం': 'Ginger(Green)', 'క్యాబేజీ': 'Cabbage', 'అరటి': 'Banana', 'మామిడి': 'Mango(Raw-Ripe)', 'ఆపిల్': 'Apple', 'నారింజ': 'Orange', 'ద్రాక్ష': 'Grapes', 'పుచ్చకాయ': 'Water Melon',
+  'ಆಲೂಗಡ್ಡೆ': 'Potato', 'ಟೊಮೆಟೊ': 'Tomato', 'ಈರುಳ್ಳಿ': 'Onion', 'ಬದನೆಕಾಯಿ': 'Brinjal', 'ಬೆಳ್ಳುಳ್ಳಿ': 'Garlic', 'ಶುಂಠಿ': 'Ginger(Green)', 'ಬಾಳೆಹಣ್ಣು': 'Banana', 'ಮಾವು': 'Mango(Raw-Ripe)', 'ಸೇಬು': 'Apple', 'ಕಿತ್ತಳೆ': 'Orange', 'ದ್ರಾಕ್ಷಿ': 'Grapes', 'ಕಲ್ಲಂಗಡಿ': 'Water Melon',
+  'തക്കാളി': 'Tomato', 'സവാള': 'Onion', 'വാഴപ്പഴം': 'Banana', 'മാങ്ങ': 'Mango(Raw-Ripe)', 'ആപ്പിൾ': 'Apple', 'ഓറഞ്ച്': 'Orange', 'മുന്തിരി': 'Grapes', 'തണ്ണിമത്തൻ': 'Water Melon'
 };
 
 const COMMON_CROPS = [
-  'Apple', 'Banana', 'Bitter gourd', 'Bottle gourd', 'Brinjal', 'Cabbage',
-  'Capsicum', 'Carrot', 'Cauliflower', 'Chilli Red', 'Coconut', 'Coriander(Leaves)',
-  'Cucumber(Kheera)', 'Garlic', 'Ginger(Green)', 'Green Chilli', 'Lemon',
-  'Mango', 'Mushroom', 'Onion', 'Orange', 'Papaya', 'Peas Wet',
-  'Pineapple', 'Pomegranate', 'Potato', 'Pumpkin', 'Radish', 'Spinach',
-  'Sweet Potato', 'Tomato', 'Water Melon'
+  // Vegetables
+  'Amaranthus', 'Ashgourd', 'Baby Corn', 'Beans', 'Beetroot',
+  'Bhindi(Ladies Finger)', 'Bitter gourd', 'Bottle gourd', 'Brinjal',
+  'Cabbage', 'Capsicum', 'Carrot', 'Cauliflower', 'Chili Red',
+  'Chow Chow', 'Cluster beans', 'Colacasia', 'Coriander(Leaves)',
+  'Cowpea(Veg)', 'Cucumbar(Kheera)', 'Drumstick',
+  'Elephant Yam(Suran)/Amorphophallus', 'Garlic', 'Ginger(Green)',
+  'Green Chilli', 'Green Peas', 'Indian Beans(Seam)', 'Knool Khol',
+  'Lemon', 'Lime', 'Little gourd(Kundru)', 'Methi(Leaves)', 'Mint(Pudina)',
+  'Mushroom', 'Onion', 'Onion Green', 'Peas Wet', 'Pointed Gourd(Parval)',
+  'Potato', 'Pumpkin', 'Raddish', 'Ridgeguard(Tori)', 'Round gourd',
+  'Snakeguard', 'Spinach', 'Sponge gourd', 'Sweet Corn', 'Sweet Potato',
+  'Tapioca', 'Tinda', 'Tomato', 'Turnip', 'Yam(Ratalu)',
+
+  // Fruits
+  'Amla(Nelli Kai)', 'Apple', 'Banana', 'Banana - Green',
+  'Chikoos(Sapota)', 'Coconut', 'Custard Apple(Sharifa)',
+  'Dragon Fruit', 'Fig(Anjeer)', 'Grapes', 'Guava', 'Jackfruit',
+  'Karbuja(Musk Melon)', 'Kinnow', 'Kiwi Fruit', 'Litchi',
+  'Mango(Raw-Ripe)', 'Mousambi(Sweet Lime)', 'Orange', 'Papaya',
+  'Papaya(Raw)', 'Passion Fruit', 'Peach', 'Pear', 'Pineapple',
+  'Plum', 'Pomegranate', 'Sapota', 'Strawberry', 'Sweet Lime',
+  'Tamarind Fruit', 'Tender Coconut', 'Water Melon'
 ];
 
 let allRecords = [];
@@ -33,12 +113,11 @@ const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&a
 async function resolveCommoditySearch(raw) {
   if (!raw) return '';
   const trimmed = raw.trim();
-  if (/^[a-zA-Z\s\-()]+$/.test(trimmed)) return trimmed;
-
   const lower = trimmed.toLowerCase();
   if (CROP_SEARCH_MAP[lower] || CROP_SEARCH_MAP[trimmed]) {
     return CROP_SEARCH_MAP[lower] || CROP_SEARCH_MAP[trimmed];
   }
+  if (/^[a-zA-Z\s\-()]+$/.test(trimmed)) return trimmed;
 
   // Google Translate fallback for any unmapped regional language term
   try {
@@ -164,10 +243,15 @@ function selectedRecords() {
   const crop = rawCrop.toLowerCase();
   const state = $('state-filter').value.toLowerCase();
   const district = $('district-filter').value.toLowerCase();
+  const mappedCrop = (CROP_SEARCH_MAP[crop] || CROP_SEARCH_MAP[rawCrop] || '').toLowerCase();
 
   return allRecords.filter(r => {
     const rCrop = r.commodity.toLowerCase();
-    const matchCrop = !crop || rCrop.includes(crop) || (rawCrop && crop.includes(rCrop));
+    const matchCrop = !crop ||
+      rCrop.includes(crop) ||
+      (rawCrop && crop.includes(rCrop)) ||
+      (mappedCrop && (rCrop.includes(mappedCrop) || mappedCrop.includes(rCrop))) ||
+      rCrop.replace(/[^a-z0-9]/g, '').includes(crop.replace(/[^a-z0-9]/g, ''));
     const matchState = !state || r.state.toLowerCase() === state;
     const matchDistrict = !district || r.district.toLowerCase() === district;
     return matchCrop && matchState && matchDistrict;
@@ -502,7 +586,25 @@ document.addEventListener('DOMContentLoaded', () => {
     if (allRecords.length) applyFilters();
   });
 
-  // Quick vegetable chips
+  // Category tabs (All Produce / Vegetables / Fruits)
+  document.querySelectorAll('.cat-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const cat = tab.dataset.category || 'all';
+
+      document.querySelectorAll('.chip').forEach(chip => {
+        const chipCat = chip.dataset.category || 'all';
+        if (cat === 'all' || chipCat === 'all' || chipCat === cat) {
+          chip.style.display = '';
+        } else {
+          chip.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // Quick commodity chips
   document.querySelectorAll('.chip').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
