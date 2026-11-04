@@ -17,7 +17,7 @@ exports.handler = async function (event, context) {
     };
   }
 
-  const apiKey = (process.env.DATA_GOV_IN_API_KEY || DEFAULT_KEY).trim();
+  const apiKey = (process.env.DATA_GOV_IN_API_KEY || DEFAULT_KEY).trim().replace(/^["']|["']$/g, '');
   if (!apiKey) {
     return {
       statusCode: 500,
@@ -36,9 +36,8 @@ exports.handler = async function (event, context) {
   api.searchParams.set('limit', '1000');
 
   for (const field of ['commodity', 'state', 'district']) {
-    let value = (params[field] || '').trim();
+    let value = (params[field] || params[field.toLowerCase()] || '').trim();
     if (value) {
-      // AGMARKNET data.gov.in filters are case-sensitive. Title Case each word if lowercase.
       if (value.toLowerCase() === value) {
         value = value.replace(/\b[a-z]/g, c => c.toUpperCase());
       }
@@ -49,7 +48,7 @@ exports.handler = async function (event, context) {
   try {
     const upstream = await fetch(api, {
       headers: { Accept: 'application/json' },
-      signal: AbortSignal.timeout(25000)
+      signal: AbortSignal.timeout(9000)
     });
     const body = await upstream.text();
 
@@ -74,4 +73,3 @@ exports.handler = async function (event, context) {
     };
   }
 };
-

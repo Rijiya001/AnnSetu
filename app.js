@@ -288,38 +288,66 @@ function setStatus(kind, text) {
   $('status-dot').className = `status-dot ${kind || ''}`;
 }
 
+const GOV_RESOURCE_ID = '9ef84268-d588-465a-a308-a864a43d0070';
+const DEFAULT_API_KEY = '579b464db66ec23bdd00000153a305cfec644f46529532df2fa82913';
+
 async function getRecords(filters = {}) {
-  const buildUrl = (base) => {
-    const u = new URL(base, location.origin);
+  const tryFetch = async (targetUrl) => {
+    const res = await fetch(targetUrl, {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(15000)
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json().catch(() => ({}));
+    if (data.status === 'error' || !Array.isArray(data.records)) {
+      throw new Error(data.message || 'No records returned from data.gov.in');
+    }
+    return data.records.map(normalise);
+  };
+
+  const getDirectGovUrl = () => {
+    const u = new URL(`https://api.data.gov.in/resource/${GOV_RESOURCE_ID}`);
+    u.searchParams.set('api-key', DEFAULT_API_KEY);
+    u.searchParams.set('format', 'json');
+    u.searchParams.set('limit', '1000');
+    for (const [field, value] of Object.entries(filters)) {
+      if (value) {
+        let v = value.trim();
+        if (v.toLowerCase() === v) {
+          v = v.replace(/\b[a-z]/g, c => c.toUpperCase());
+        }
+        u.searchParams.set(`filters[${field}]`, v);
+      }
+    }
+    return u;
+  };
+
+  const getLocalProxyUrl = () => {
+    const u = new URL('/api/prices', location.origin);
     for (const [field, value] of Object.entries(filters)) {
       if (value) u.searchParams.set(field.toLowerCase(), value);
     }
     return u;
   };
 
-  let res;
-  try {
-    res = await fetch(buildUrl('/api/prices'), { headers: { Accept: 'application/json' } });
-    if (!res.ok && (res.status === 404 || res.status === 502)) {
-      // Fallback directly to Netlify serverless function path
-      res = await fetch(buildUrl('/.netlify/functions/prices'), { headers: { Accept: 'application/json' } });
-    }
-  } catch (_) {
-    // If /api/prices caused network error, retry via direct function path
-    res = await fetch(buildUrl('/.netlify/functions/prices'), { headers: { Accept: 'application/json' } }).catch(() => null);
-  }
+  // When deployed on Netlify, connect directly to official AGMARKNET data.gov.in (has CORS Access-Control-Allow-Origin: *).
+  // This completely avoids the foreign cloud server block (NIC firewall returns ECONNREFUSED to AWS/Netlify IPs).
+  const isLocalDev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 
-  if (!res || !res.ok) {
-    throw new Error(res ? `HTTP ${res.status}` : 'Network error');
+  if (isLocalDev) {
+    try {
+      return await tryFetch(getLocalProxyUrl());
+    } catch (_) {
+      return await tryFetch(getDirectGovUrl());
+    }
+  } else {
+    try {
+      return await tryFetch(getDirectGovUrl());
+    } catch (errDirect) {
+      console.warn('[Ann Setu] Direct government API failed, trying proxy:', errDirect.message);
+      return await tryFetch(getLocalProxyUrl());
+    }
   }
-  const data = await res.json().catch(() => ({}));
-  if (data.status === 'error') {
-    throw new Error(data.message || 'API error');
-  }
-  if (!Array.isArray(data.records)) {
-    throw new Error(data.message || 'No records returned from data.gov.in');
-  }
-  return data.records.map(normalise);
 }
 
 function selectedRecords() {
