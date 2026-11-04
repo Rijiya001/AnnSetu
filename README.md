@@ -1,24 +1,46 @@
 # VejBhav
 
-A mobile-first mandi price viewer using the Government of India's AGMARKNET daily price dataset through the free data.gov.in API. The Node server keeps the API key in `.env` and proxies requests so the key is never exposed to the browser.
+A mobile-first Indian vegetable & fruit mandi price viewer powered by official Government of India AGMARKNET daily price reports through the free `data.gov.in` API.
 
-## Run
+- **Zero setup for visitors:** No API key prompts or developer settings on the website.
+- **100% authentic government data:** True modal, minimum, and maximum prices directly from AGMARKNET.
+- **Multilingual:** Full support for English, Hindi (हिन्दी), and Marathi (मराठी) including crop names, varieties, and states.
+- **Vercel-ready:** Deploy with one click to Vercel via Serverless Functions.
 
-Use Node.js 20.6 or newer. Start the app with `npm start`, then visit `http://localhost:3000`.
+---
 
-## Connect prices
+## Deploy to Vercel
 
-1. Create a free account at [data.gov.in](https://www.data.gov.in/user/register) and generate an API key.
-2. Put it in `.env` as `DATA_GOV_IN_API_KEY=your_key`.
-3. Restart the server, then search for a commodity and optionally filter by state and district.
+1. Push this repository to GitHub.
+2. Go to [vercel.com](https://vercel.com) and click **"Add New Project"**.
+3. Select your **VejBhav** repository.
+4. In the **Environment Variables** section, add:
+   - **Key:** `DATA_GOV_IN_API_KEY`
+   - **Value:** `your_data_gov_in_api_key`
+5. Click **Deploy**.
 
-`.env` is excluded from version control. Never commit your key.
+That's it! Your site will be live on your Vercel URL (e.g., `https://vejbhav.vercel.app`) and serve official prices worldwide without asking visitors for any API key.
 
-## Data notes
+---
 
-- The source is the official [AGMARKNET daily mandi prices dataset](https://www.data.gov.in/resource/current-daily-price-various-commodities-various-markets-mandi), resource `9ef84268-d588-465a-a308-a864a43d0070`.
-- The feed is daily market reporting, not tick-by-tick real-time pricing. Arrival dates are shown as reported, and mandi updates can be delayed.
-- Modal prices are shown in ₹ per quintal, as returned by the source.
-- The API does not sort by `arrival_date` server-side because that field is indexed as text. Returned records are ordered by arrival date in the app instead.
-- The chart groups available source records by arrival date and plots the median modal price. It does not estimate, extrapolate, or fill missing dates. Historical coverage depends on records returned by the API.
-- The interface currently supports English, Hindi, and Marathi.
+## Local Development
+
+1. Ensure Node.js (v20.6.0+) is installed.
+2. In `.env`, add your free API key:
+   ```env
+   DATA_GOV_IN_API_KEY=your_data_gov_in_api_key
+   PORT=3000
+   ```
+3. Start the local server:
+   ```bash
+   npm start
+   ```
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## Official Data Source
+
+- **Source:** AGMARKNET published by the Ministry of Agriculture & Farmers Welfare via [data.gov.in](https://www.data.gov.in/resource/current-daily-price-various-commodities-various-markets-mandi) (Resource ID: `9ef84268-d588-465a-a308-a864a43d0070`).
+- **Units:** All prices are official mandi rates reported per quintal (100 kg).
+- **Security:** The API key is kept on the server / Vercel serverless function and is never exposed to the client browser.

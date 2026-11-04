@@ -1,5 +1,4 @@
 const langStore = 'vejbhaav.language';
-const KEY_STORE = 'vejbhaav.dataGovKey';
 
 const copy = {
   en: {
@@ -21,14 +20,12 @@ const copy = {
     districtLabel: 'DISTRICT',
     anyDistrict: 'Any district',
     searchButton: 'See prices',
-    statusNeedKey: 'Connect a free data.gov.in key to load official prices',
-    statusLoading: 'Getting the latest available government reports…',
+    statusLoading: 'Loading official AGMARKNET prices…',
     statusConnected: 'Connected to official AGMARKNET reports',
-    statusError: 'Could not load official data. Check your key or try again.',
+    statusError: 'Could not load official data. Please refresh or try again later.',
     statusNoResults: 'No matching reports found in the available data.',
-    emptyTitle: 'Prices, without the guesswork',
-    emptyText: 'Add your free data.gov.in API key in settings to see real mandi reports. No sample prices, ever.',
-    connectButton: 'Connect data source',
+    emptyTitle: 'No market reports found',
+    emptyText: 'No price reports found for this selection today. Try selecting another crop or choosing "All states".',
     resultsTitle: 'Market reports',
     unitNote: 'Prices shown per quintal (100 kg)',
     thMarket: 'MARKET',
@@ -51,17 +48,6 @@ const copy = {
     trustText: 'Prices come from AGMARKNET, published by India’s Ministry of Agriculture through the open data portal. Reports are daily, and may arrive with a delay.',
     sourceLink: 'View official source ↗',
     footerText: 'Made for clearer market decisions · Prices are indicative reports, not a guaranteed offer.',
-    settingsEyebrow: 'DATA SOURCE',
-    settingsTitle: 'Connect official prices',
-    settingsText: 'Enter a free API key from data.gov.in. Your key stays in this browser and is only sent to the official data.gov.in API.',
-    getKey: 'Get a free API key ↗',
-    keyLabel: 'YOUR DATA.GOV.IN API KEY',
-    clearKey: 'Clear saved key',
-    saveConnect: 'Save & connect →',
-    privacyNote: 'Stored only on this device. No account needed.',
-    show: 'Show',
-    hide: 'Hide',
-    keyRequired: 'Enter your data.gov.in API key to continue.',
     resultSingular: 'market report',
     resultPlural: 'market reports',
     dateUnknown: 'Date not reported',
@@ -70,14 +56,11 @@ const copy = {
     chartDays: 'report days shown',
     chartOneDay: 'report day shown',
     noCrop: 'All available crops',
-    toastSaved: 'API key saved on this device.',
-    toastCleared: 'Saved API key cleared.',
     fresh: 'Most recent report',
     stale: 'Latest available report',
     noPrices: 'No price history in the available reports.',
     chartFilter: 'Showing matching reports in the available dataset.',
     loading: 'Loading…',
-    errorKey: 'The API rejected that key. Check it and try again.',
     errorNetwork: 'The official data service could not be reached. Please try again later.',
     districtAny: 'Any district',
     allVeg: 'All Vegetables'
@@ -101,14 +84,12 @@ const copy = {
     districtLabel: 'ज़िला',
     anyDistrict: 'कोई भी ज़िला',
     searchButton: 'भाव देखें',
-    statusNeedKey: 'आधिकारिक भाव देखने के लिए data.gov.in की मुफ़्त कुंजी जोड़ें',
-    statusLoading: 'सरकारी मंडी रिपोर्ट प्राप्त हो रही हैं…',
+    statusLoading: 'सरकारी मंडी रिपोर्ट लोड हो रही हैं…',
     statusConnected: 'AGMARKNET की आधिकारिक रिपोर्ट से जुड़ा',
-    statusError: 'आधिकारिक डेटा नहीं मिला। कुंजी जाँचें या फिर प्रयास करें।',
+    statusError: 'आधिकारिक डेटा लोड नहीं हो सका। कृपया बाद में प्रयास करें।',
     statusNoResults: 'उपलब्ध रिपोर्ट में इस खोज का भाव नहीं मिला।',
-    emptyTitle: 'बिना अंदाज़े के मंडी भाव',
-    emptyText: 'असली मंडी रिपोर्ट देखने के लिए सेटिंग में अपनी मुफ़्त data.gov.in API कुंजी जोड़ें। यहाँ नकली भाव नहीं दिखाए जाते।',
-    connectButton: 'डेटा स्रोत जोड़ें',
+    emptyTitle: 'कोई मंडी रिपोर्ट नहीं मिली',
+    emptyText: 'आज के लिए इस फ़सल या राज्य की कोई रिपोर्ट दर्ज नहीं है। कृपया कोई अन्य फ़सल या "सभी राज्य" चुनकर देखें।',
     resultsTitle: 'मंडी रिपोर्ट',
     unitNote: 'भाव प्रति क्विंटल (100 किलो)',
     thMarket: 'मंडी',
@@ -131,17 +112,6 @@ const copy = {
     trustText: 'भाव भारत सरकार के कृषि मंत्रालय द्वारा AGMARKNET से प्रकाशित किए जाते हैं। रिपोर्ट रोज़ आती हैं और उनमें देरी हो सकती है।',
     sourceLink: 'आधिकारिक स्रोत देखें ↗',
     footerText: 'बेहतर मंडी फ़ैसलों के लिए · ये दर्ज भाव हैं, बिक्री की गारंटी नहीं।',
-    settingsEyebrow: 'डेटा स्रोत',
-    settingsTitle: 'आधिकारिक भाव जोड़ें',
-    settingsText: 'data.gov.in की मुफ़्त API कुंजी डालें। कुंजी इसी ब्राउज़र में रहेगी और केवल सरकारी API को भेजी जाएगी।',
-    getKey: 'मुफ़्त API कुंजी पाएँ ↗',
-    keyLabel: 'आपकी DATA.GOV.IN API कुंजी',
-    clearKey: 'सहेजी कुंजी हटाएँ',
-    saveConnect: 'सहेजें और जोड़ें →',
-    privacyNote: 'केवल इस डिवाइस पर सहेजी जाएगी। खाता ज़रूरी नहीं।',
-    show: 'दिखाएँ',
-    hide: 'छिपाएँ',
-    keyRequired: 'जारी रखने के लिए data.gov.in API कुंजी डालें।',
     resultSingular: 'मंडी रिपोर्ट',
     resultPlural: 'मंडी रिपोर्ट',
     dateUnknown: 'तारीख़ उपलब्ध नहीं',
@@ -150,14 +120,11 @@ const copy = {
     chartDays: 'रिपोर्ट के दिन',
     chartOneDay: 'रिपोर्ट का दिन',
     noCrop: 'सभी उपलब्ध फ़सलें',
-    toastSaved: 'API कुंजी इस डिवाइस पर सहेजी गई।',
-    toastCleared: 'सहेजी कुंजी हटा दी गई।',
     fresh: 'सबसे नई रिपोर्ट',
     stale: 'नवीनतम उपलब्ध रिपोर्ट',
     noPrices: 'उपलब्ध रिपोर्ट में भाव का इतिहास नहीं है।',
     chartFilter: 'उपलब्ध रिपोर्ट में मिलते भाव दिख रहे हैं।',
     loading: 'लोड हो रहा है…',
-    errorKey: 'API कुंजी स्वीकार नहीं हुई। कुंजी जाँचकर फिर प्रयास करें।',
     errorNetwork: 'सरकारी डेटा सेवा से संपर्क नहीं हो पाया। बाद में फिर प्रयास करें।',
     districtAny: 'कोई भी ज़िला',
     allVeg: 'सभी सब्जियां'
@@ -181,14 +148,12 @@ const copy = {
     districtLabel: 'जिल्हा',
     anyDistrict: 'कोणताही जिल्हा',
     searchButton: 'भाव पहा',
-    statusNeedKey: 'अधिकृत भाव मिळवण्यासाठी data.gov.in ची विनामूल्य कळ जोडा',
-    statusLoading: 'सरकारी बाजार अहवाल मिळवत आहोत…',
+    statusLoading: 'सरकारी बाजार अहवाल लोड होत आहेत…',
     statusConnected: 'AGMARKNET च्या अधिकृत अहवालाशी जोडले',
-    statusError: 'अधिकृत डेटा मिळाला नाही. कळ तपासा किंवा पुन्हा प्रयत्न करा.',
+    statusError: 'अधिकृत डेटा लोड होऊ शकला नाही. कृपया नंतर पुन्हा प्रयत्न करा.',
     statusNoResults: 'उपलब्ध अहवालांत जुळणारे भाव सापडले नाहीत.',
-    emptyTitle: 'अंदाजाऐवजी बाजारभाव',
-    emptyText: 'खरे बाजार अहवाल पाहण्यासाठी सेटिंगमध्ये तुमची विनामूल्य data.gov.in API कळ जोडा. येथे बनावट भाव दाखवले जात नाहीत.',
-    connectButton: 'डेटा स्रोत जोडा',
+    emptyTitle: 'कोणतेही बाजार अहवाल सापडले नाहीत',
+    emptyText: 'आज या पिकासाठी किंवा राज्यासाठी कोणतेही अहवाल उपलब्ध नाहीत. कृपया दुसरे पीक किंवा "सर्व राज्ये" निवडून पहा.',
     resultsTitle: 'बाजार अहवाल',
     unitNote: 'भाव प्रति क्विंटल (१०० किलो)',
     thMarket: 'बाजार',
@@ -211,17 +176,6 @@ const copy = {
     trustText: 'भाव भारताच्या कृषी मंत्रालयाकडून AGMARKNET द्वारे खुले डेटा पोर्टलवर प्रकाशित होतात. अहवाल रोज येतात; विलंब होऊ शकतो.',
     sourceLink: 'अधिकृत स्रोत पहा ↗',
     footerText: 'चांगल्या बाजार निर्णयांसाठी · हे सूचक अहवाल आहेत, विक्रीची हमी नाही.',
-    settingsEyebrow: 'डेटा स्रोत',
-    settingsTitle: 'अधिकृत भाव जोडा',
-    settingsText: 'data.gov.in ची विनामूल्य API कळ भरा. तुमची कळ या ब्राउझरमध्येच राहील आणि फक्त अधिकृत API कडे पाठवली जाईल.',
-    getKey: 'विनामूल्य API कळ मिळवा ↗',
-    keyLabel: 'तुमची DATA.GOV.IN API कळ',
-    clearKey: 'साठवलेली कळ पुसा',
-    saveConnect: 'साठवा आणि जोडा →',
-    privacyNote: 'फक्त या उपकरणावर साठवली जाते. खाते लागत नाही.',
-    show: 'दाखवा',
-    hide: 'लपवा',
-    keyRequired: 'पुढे जाण्यासाठी data.gov.in API कळ भरा.',
     resultSingular: 'बाजार अहवाल',
     resultPlural: 'बाजार अहवाल',
     dateUnknown: 'तारीख नोंदलेली नाही',
@@ -230,14 +184,11 @@ const copy = {
     chartDays: 'अहवालांचे दिवस',
     chartOneDay: 'अहवालाचा दिवस',
     noCrop: 'सर्व उपलब्ध पिके',
-    toastSaved: 'API कळ या उपकरणावर साठवली.',
-    toastCleared: 'साठवलेली API कळ पुसली.',
     fresh: 'सर्वात नवीन अहवाल',
     stale: 'नवीनतम उपलब्ध अहवाल',
     noPrices: 'उपलब्ध अहवालांत भावांचा इतिहास नाही.',
     chartFilter: 'उपलब्ध अहवालांतील जुळणारे भाव दाखवत आहोत.',
     loading: 'लोड होत आहे…',
-    errorKey: 'API कळ नाकारली. कळ तपासून पुन्हा प्रयत्न करा.',
     errorNetwork: 'सरकारी डेटा सेवेशी संपर्क झाला नाही. कृपया नंतर पुन्हा प्रयत्न करा.',
     districtAny: 'कोणताही जिल्हा',
     allVeg: 'सर्व भाज्या'
@@ -395,11 +346,10 @@ const COMMON_CROPS = [
 let language = localStorage.getItem(langStore) || 'en';
 let allRecords = [];
 let latestRecords = [];
-let toastTimer;
 
 const $ = (id) => document.getElementById(id);
 const tr = (key) => copy[language]?.[key] || copy.en[key] || key;
-const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
 
 function trCrop(name) {
   if (!name || language === 'en') return name;
@@ -546,29 +496,15 @@ function setStatus(kind, text) {
   $('status-dot').className = `status-dot ${kind || ''}`;
 }
 
-function showToast(text) {
-  const t = $('toast');
-  t.textContent = text;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
-}
-
 async function getRecords(filters = {}) {
   const url = new URL('/api/prices', location.origin);
   for (const [field, value] of Object.entries(filters)) {
     if (value) url.searchParams.set(field.toLowerCase(), value);
   }
-  const headers = { Accept: 'application/json' };
-  const localKey = localStorage.getItem(KEY_STORE);
-  if (localKey) headers['x-api-key'] = localKey;
-
-  const res = await fetch(url, { headers });
+  const res = await fetch(url, { headers: { Accept: 'application/json' } });
   const data = await res.json().catch(() => ({}));
   if (!res.ok || data.status === 'error') {
-    const e = new Error(data.message || `HTTP ${res.status}`);
-    e.keyIssue = res.status === 503 || res.status === 401 || res.status === 403 || data.error === 'API key missing' || (data.message && data.message.toLowerCase().includes('key'));
-    throw e;
+    throw new Error(data.message || `HTTP ${res.status}`);
   }
   if (!Array.isArray(data.records)) throw new Error(data.message || 'No records returned from data.gov.in');
   return data.records.map(normalise);
@@ -691,7 +627,7 @@ function getRealHistoryPoints(records, selectedCrop) {
   let historyStore = {};
   try {
     historyStore = JSON.parse(localStorage.getItem(storageKey) || '{}');
-  } catch (_) {}
+  } catch (_) { }
 
   if (!historyStore[cropKey]) historyStore[cropKey] = {};
 
@@ -703,7 +639,7 @@ function getRealHistoryPoints(records, selectedCrop) {
 
   try {
     localStorage.setItem(storageKey, JSON.stringify(historyStore));
-  } catch (_) {}
+  } catch (_) { }
 
   // Return all authentic records sorted by date
   return Object.entries(historyStore[cropKey])
@@ -771,10 +707,10 @@ function renderChart(records) {
         </div>
         <p class="spread-footer-note">
           ${language === 'hi'
-            ? '✓ यह आधिकारिक AGMARKNET का 100% असली डेटा है। सरकारी मंडी रिपोर्ट रोज़ एक बार आती हैं; जैसे-जैसे अगले दिनों के असली भाव आएँगे, वे यहाँ तारीख-दर-तारीख जुड़ते जाएँगे।'
-            : language === 'mr'
-            ? '✓ हा AGMARKNET चा १००% खरा अधिकृत डेटा आहे. सरकारी बाजार अहवाल रोज एकदा प्रसिद्ध होतात; पुढील दिवसांचे खरे भाव येताच ते येथे नोंदवले जातील.'
-            : '✓ 100% authentic AGMARKNET government report. Mandi reports are published once daily; historical trend lines connect real daily reports as they accumulate.'}
+        ? '✓ यह आधिकारिक AGMARKNET का 100% असली डेटा है। सरकारी मंडी रिपोर्ट रोज़ एक बार आती हैं; जैसे-जैसे अगले दिनों के असली भाव आएँगे, वे यहाँ तारीख-दर-तारीख जुड़ते जाएँगे।'
+        : language === 'mr'
+          ? '✓ हा AGMARKNET चा १००% खरा अधिकृत डेटा आहे. सरकारी बाजार अहवाल रोज एकदा प्रसिद्ध होतात; पुढील दिवसांचे खरे भाव येताच ते येथे नोंदवले जातील.'
+          : '✓ 100% authentic AGMARKNET government report. Mandi reports are published once daily; historical trend lines connect real daily reports as they accumulate.'}
         </p>
       </div>
     `;
@@ -804,8 +740,8 @@ function renderChart(records) {
   const line = xy.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
   const area = `${line} L${xy.at(-1).x},${height} L${xy[0].x},${height} Z`;
 
-  const tickIndices = points.length <= 4 
-    ? points.map((_, i) => i) 
+  const tickIndices = points.length <= 4
+    ? points.map((_, i) => i)
     : [0, Math.floor(points.length * 0.33), Math.floor(points.length * 0.66), points.length - 1];
 
   const tickLabels = tickIndices.map((idx, i) => {
@@ -855,13 +791,12 @@ async function loadPrices({ force = false } = {}) {
     displayResults(chosen);
     setStatus('connected', chosen.length ? tr('statusConnected') : tr('statusNoResults'));
   } catch (e) {
-    const msg = e.keyIssue ? 'Invalid or missing API key. Add your data.gov.in key to .env and restart.' : (e.message && e.message !== `HTTP ${e.status}` ? e.message : tr('errorNetwork'));
+    const msg = tr('statusError');
     setStatus('error', msg);
     $('empty-state').classList.remove('hidden');
     $('results').classList.add('hidden');
-    $('empty-state').querySelector('p').textContent = msg;
-    $('chart-period').textContent = e.keyIssue ? 'API key not configured' : 'Data service unavailable';
-    $('chart-area').innerHTML = `<div class="chart-empty">${esc(msg)} Start the app with <code>npm start</code> and open <code>http://localhost:3000</code>.</div>`;
+    $('chart-period').textContent = tr('chartAwait');
+    $('chart-area').innerHTML = `<div class="chart-empty">${esc(tr('chartEmpty'))}</div>`;
   } finally {
     $('refresh').disabled = false;
   }
@@ -878,45 +813,6 @@ function applyFilters() {
   setStatus('connected', filtered.length ? tr('statusConnected') : tr('statusNoResults'));
 }
 
-async function checkKeyStatus() {
-  const statusBox = $('key-status-box');
-  const statusMsg = $('key-status-msg');
-  if (!statusBox || !statusMsg) return;
-
-  const localKey = localStorage.getItem(KEY_STORE) || '';
-  try {
-    const res = await fetch('/api/status');
-    const data = await res.json();
-    if (data.hasKey || localKey) {
-      const preview = data.keyPreview || (localKey ? `${localKey.slice(0, 8)}...${localKey.slice(-4)}` : '');
-      statusBox.className = 'key-status-box active';
-      statusMsg.textContent = `${language === 'hi' ? '✓ सक्रिय API कुंजी जुड़ी हुई है' : language === 'mr' ? '✓ सक्रिय API कळ जोडलेली आहे' : '✓ Active API key connected'} (${preview})`;
-      statusBox.classList.remove('hidden');
-      if (localKey && !$('api-key').value) $('api-key').value = localKey;
-    } else {
-      statusBox.className = 'key-status-box missing';
-      statusMsg.textContent = language === 'hi' ? '⚠️ कोई API कुंजी नहीं जुड़ी है। कृपया नीचे अपनी मुफ़्त कुंजी दर्ज करें।' : language === 'mr' ? '⚠️ कोणतीही API कळ जोडलेली नाही. कृपया खाली आपली विनामूल्य कळ भरा.' : '⚠️ No API key connected. Please enter your free key below.';
-      statusBox.classList.remove('hidden');
-    }
-  } catch (_) {
-    if (localKey) {
-      statusBox.className = 'key-status-box active';
-      statusMsg.textContent = `✓ Key saved on device (${localKey.slice(0, 8)}...${localKey.slice(-4)})`;
-      statusBox.classList.remove('hidden');
-      $('api-key').value = localKey;
-    }
-  }
-}
-
-function openSettings() {
-  const d = $('settings-dialog');
-  $('key-error').classList.add('hidden');
-  const localKey = localStorage.getItem(KEY_STORE) || '';
-  if (localKey) $('api-key').value = localKey;
-  checkKeyStatus();
-  if (!d.open) d.showModal();
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   $('language').value = language;
   applyLanguage();
@@ -928,52 +824,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (allRecords.length) {
       displayResults(selectedRecords());
     }
-  });
-
-  $('settings-open').addEventListener('click', openSettings);
-  $('empty-settings').addEventListener('click', openSettings);
-
-  $('toggle-key').addEventListener('click', () => {
-    const input = $('api-key');
-    input.type = input.type === 'password' ? 'text' : 'password';
-    $('toggle-key').textContent = tr(input.type === 'password' ? 'show' : 'hide');
-  });
-
-  $('save-key').addEventListener('click', async () => {
-    const key = $('api-key').value.trim();
-    if (!key) {
-      $('key-error').textContent = tr('keyRequired');
-      $('key-error').classList.remove('hidden');
-      return;
-    }
-    $('key-error').classList.add('hidden');
-    $('save-key').disabled = true;
-    $('save-key').textContent = tr('loading');
-
-    try {
-      // Save to server .env & memory
-      await fetch('/api/save-key', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key })
-      }).catch(() => {});
-
-      // Save to browser localStorage
-      localStorage.setItem(KEY_STORE, key);
-      $('settings-dialog').close();
-      showToast(tr('toastSaved'));
-      loadPrices({ force: true });
-    } finally {
-      $('save-key').disabled = false;
-      $('save-key').textContent = tr('saveConnect');
-    }
-  });
-
-  $('clear-key').addEventListener('click', () => {
-    localStorage.removeItem(KEY_STORE);
-    $('api-key').value = '';
-    showToast(tr('toastCleared'));
-    checkKeyStatus();
   });
 
   $('refresh').addEventListener('click', () => loadPrices({ force: true }));

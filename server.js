@@ -17,61 +17,15 @@ const MIME = {
 async function route(req, res) {
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
 
-  if (url.pathname === '/api/status' && req.method === 'GET') {
-    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    return res.end(JSON.stringify({
-      hasKey: Boolean(currentKey),
-      keyPreview: currentKey ? `${currentKey.slice(0, 8)}...${currentKey.slice(-4)}` : null,
-      port: PORT
-    }));
-  }
-
-  if (url.pathname === '/api/save-key' && req.method === 'POST') {
-    let body = '';
-    req.on('data', chunk => { body += chunk; });
-    req.on('end', () => {
-      try {
-        const parsed = JSON.parse(body || '{}');
-        const newKey = String(parsed.key || '').trim();
-        if (!newKey) {
-          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-          return res.end(JSON.stringify({ error: 'Key is required' }));
-        }
-        currentKey = newKey;
-        try {
-          const envPath = path.join(ROOT, '.env');
-          let envContent = '';
-          if (fs.existsSync(envPath)) envContent = fs.readFileSync(envPath, 'utf8');
-          if (envContent.includes('DATA_GOV_IN_API_KEY=')) {
-            envContent = envContent.replace(/DATA_GOV_IN_API_KEY=.*/g, `DATA_GOV_IN_API_KEY=${newKey}`);
-          } else {
-            envContent = `DATA_GOV_IN_API_KEY=${newKey}\n` + envContent;
-          }
-          fs.writeFileSync(envPath, envContent, 'utf8');
-          console.log('[API] Saved new DATA_GOV_IN_API_KEY to .env and memory.');
-        } catch (e) {
-          console.warn('[API] Could not write to .env:', e.message);
-        }
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        return res.end(JSON.stringify({ status: 'ok', message: 'API key saved successfully' }));
-      } catch (err) {
-        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-        return res.end(JSON.stringify({ error: 'Invalid JSON' }));
-      }
-    });
-    return;
-  }
-
   if (url.pathname === '/api/prices') {
     res.setHeader('Cache-Control', 'no-store');
-    const clientKey = (req.headers['x-api-key'] || url.searchParams.get('api_key') || '').trim();
-    const activeKey = clientKey || currentKey;
+    const activeKey = currentKey;
 
     if (!activeKey) {
       res.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8' });
       return res.end(JSON.stringify({
         error: 'API key missing',
-        message: 'Add DATA_GOV_IN_API_KEY to your .env file or enter it in Settings.'
+        message: 'DATA_GOV_IN_API_KEY is not configured on the server.'
       }));
     }
 
