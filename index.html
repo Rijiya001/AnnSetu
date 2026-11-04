@@ -4,9 +4,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#f5f7f2" />
+  <meta name="theme-color" content="#f5f7f2" id="meta-theme-color" />
   <meta name="description" content="Ann Setu — Clear, daily mandi prices from India's official AGMARKNET data." />
   <title>Ann Setu — Mandi prices, made clear</title>
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('annsetu.theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+          var meta = document.getElementById('meta-theme-color');
+          if (meta) meta.setAttribute('content', '#101712');
+        }
+      } catch (e) {}
+    })();
+  </script>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="apple-touch-icon" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,6 +40,18 @@
         href="#history">Price history</a><a href="#about">About the data</a>
     </nav>
     <div class="top-actions">
+      <button type="button" class="theme-toggle notranslate" id="theme-toggle" aria-label="Switch to dark theme" title="Toggle dark mode">
+        <span class="theme-icon" aria-hidden="true">
+          <svg class="icon-moon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+          </svg>
+          <svg class="icon-sun" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+        </span>
+        <span class="theme-label" id="theme-label">Dark</span>
+      </button>
       <div class="language-picker notranslate" title="Select language">
         <span class="lang-icon" aria-hidden="true">文</span>
         <span class="lang-label" id="lang-current">English</span>

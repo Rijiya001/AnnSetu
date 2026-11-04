@@ -1,4 +1,68 @@
 const langStore = 'annsetu.language';
+const themeStore = 'annsetu.theme';
+
+function getPreferredTheme() {
+  const saved = localStorage.getItem(themeStore);
+  if (saved === 'dark' || saved === 'light') return saved;
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function updateThemeUI(theme) {
+  const toggleBtn = $('theme-toggle');
+  const themeLabel = $('theme-label');
+  const isDark = theme === 'dark';
+
+  if (toggleBtn) {
+    toggleBtn.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+    toggleBtn.setAttribute('title', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+  }
+  if (themeLabel) {
+    themeLabel.textContent = isDark ? 'Light' : 'Dark';
+  }
+
+  const metaTheme = $('meta-theme-color') || document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute('content', isDark ? '#101712' : '#f5f7f2');
+  }
+}
+
+function setTheme(theme, save = true) {
+  document.documentElement.setAttribute('data-theme', theme);
+  if (save) {
+    try {
+      localStorage.setItem(themeStore, theme);
+    } catch (_) { }
+  }
+  updateThemeUI(theme);
+
+  // If a chart is currently shown, re-render it so SVG inline colors or gradients adjust
+  if (latestRecords && latestRecords.length && $('crop-search') && $('crop-search').value.trim()) {
+    renderChart(latestRecords);
+  }
+}
+
+function initTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || getPreferredTheme();
+  setTheme(currentTheme, false);
+
+  const toggleBtn = $('theme-toggle');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const active = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      const next = active === 'dark' ? 'light' : 'dark';
+      setTheme(next, true);
+    });
+  }
+
+  // Listen for system theme changes if user has not set a manual override
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      if (!localStorage.getItem(themeStore)) {
+        setTheme(e.matches ? 'dark' : 'light', false);
+      }
+    });
+  }
+}
 
 // Comprehensive search mapper for common regional names & variants to AGMARKNET English commodities
 const CROP_SEARCH_MAP = {
@@ -125,7 +189,7 @@ async function resolveCommoditySearch(raw) {
     const data = await res.json();
     const trans = data?.[0]?.[0]?.[0];
     if (trans && typeof trans === 'string') return trans.trim();
-  } catch (_) {}
+  } catch (_) { }
 
   return trimmed;
 }
@@ -318,7 +382,7 @@ function displayResults(records) {
 
   $('empty-state').classList.toggle('hidden', records.length > 0);
   $('results').classList.toggle('hidden', records.length === 0);
-  
+
   // Only show the Price Range card when a specific vegetable is selected/searched
   const histEl = $('history');
   if (histEl) {
@@ -482,6 +546,12 @@ function renderChart(records) {
   const line = xy.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
   const area = `${line} L${xy.at(-1).x},${height} L${xy[0].x},${height} Z`;
 
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const textColor = isDark ? '#849987' : '#8a9387';
+  const strokeColor = isDark ? '#4ade80' : '#3d7549';
+  const circleFill = isDark ? '#162018' : '#fff';
+  const gradStopColor = isDark ? '#4ade80' : '#79a375';
+
   const tickIndices = points.length <= 4
     ? points.map((_, i) => i)
     : [0, Math.floor(points.length * 0.33), Math.floor(points.length * 0.66), points.length - 1];
@@ -489,20 +559,20 @@ function renderChart(records) {
   const tickLabels = tickIndices.map((idx, i) => {
     const p = xy[idx];
     const align = i === 0 ? 'start' : i === tickIndices.length - 1 ? 'end' : 'middle';
-    return `<text x="${p.x.toFixed(1)}" y="${height - 2}" text-anchor="${align}" fill="#8a9387" font-size="11">${esc(formatDate(p.day))}</text>`;
+    return `<text x="${p.x.toFixed(1)}" y="${height - 2}" text-anchor="${align}" fill="${textColor}" font-size="11">${esc(formatDate(p.day))}</text>`;
   }).join('');
 
   $('chart-area').innerHTML = `
     <svg viewBox="0 0 ${width} ${height + 8}" preserveAspectRatio="none" role="img" aria-label="Daily median across matching markets">
       <defs>
         <linearGradient id="priceFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#79a375" stop-opacity=".25"/>
-          <stop offset="1" stop-color="#79a375" stop-opacity="0.01"/>
+          <stop offset="0" stop-color="${gradStopColor}" stop-opacity="${isDark ? '.35' : '.25'}"/>
+          <stop offset="1" stop-color="${gradStopColor}" stop-opacity="0.01"/>
         </linearGradient>
       </defs>
       <path d="${area}" fill="url(#priceFill)"/>
-      <path d="${line}" fill="none" stroke="#3d7549" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
-      ${xy.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5" fill="#fff" stroke="#3d7549" stroke-width="2" vector-effect="non-scaling-stroke"><title>${esc(formatDate(p.day))}: ₹${formatPrice(p.val)}</title></circle>`).join('')}
+      <path d="${line}" fill="none" stroke="${strokeColor}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+      ${xy.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5" fill="${circleFill}" stroke="${strokeColor}" stroke-width="2" vector-effect="non-scaling-stroke"><title>${esc(formatDate(p.day))}: ₹${formatPrice(p.val)}</title></circle>`).join('')}
       ${tickLabels}
     </svg>
   `;
@@ -556,6 +626,9 @@ function applyFilters() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize Dark / Light Theme
+  initTheme();
+
   // Setup Google Translate Language Selection
   const initialLang = localStorage.getItem(langStore) || localStorage.getItem('vejbhaav.language') || getGoogleCookieLang() || 'en';
   $('language').value = initialLang;
