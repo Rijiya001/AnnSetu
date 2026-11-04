@@ -1,18 +1,18 @@
 # VejBhav
 
-A mobile-first mandi price viewer using the Government of India's AGMARKNET daily price dataset through the free data.gov.in API.
+A mobile-first mandi price viewer using the Government of India's AGMARKNET daily price dataset through the free data.gov.in API. The Node server keeps the API key in `.env` and proxies requests so the key is never exposed to the browser.
 
 ## Run
 
-Open `index.html` in a modern browser, or serve this folder with any static file server. There are no build steps or paid services.
+Use Node.js 20.6 or newer. Start the app with `npm start`, then visit `http://localhost:3000`.
 
 ## Connect prices
 
 1. Create a free account at [data.gov.in](https://www.data.gov.in/user/register) and generate an API key.
-2. Open VejBhav, choose the settings icon, and paste the key.
-3. Search for a commodity, then optionally filter by state and district.
+2. Put it in `.env` as `DATA_GOV_IN_API_KEY=your_key`.
+3. Restart the server, then search for a commodity and optionally filter by state and district.
 
-The key is stored in browser local storage and sent directly to `api.data.gov.in`; this prototype has no server. Use a server-side proxy and private environment variable before deploying a shared public site so one shared key is not exposed to every visitor.
+`.env` is excluded from version control. Never commit your key.
 
 ## Data notes
 

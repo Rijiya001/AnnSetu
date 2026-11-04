@@ -1,6 +1,3 @@
-const RESOURCE = '9ef84268-d588-465a-a308-a864a43d0070';
-const API_BASE = `https://api.data.gov.in/resource/${RESOURCE}`;
-const KEY_STORE = 'vejbhaav.dataGovKey';
 const langStore = 'vejbhaav.language';
 const copy = {
   en: {navPrices:'Market prices',navHistory:'Price history',navAbout:'About the data',language:'Language',heroEyebrow:"INDIA'S MANDI PRICES · STRAIGHT FROM THE SOURCE",heroTitle:'Know your market.<br /><em>Choose your moment.</em>',heroText:'Compare today’s reported prices and see how they have moved. Clear information for better selling and fairer buying.',heroNote:'Official market reports, with the date and source always in view.',sectionEyebrow:'YOUR LOCAL MARKET, AT A GLANCE',sectionTitle:'Today’s mandi prices',refresh:'Refresh data',cropLabel:'WHAT ARE YOU SELLING?',cropPlaceholder:'Search a fruit or vegetable',stateLabel:'STATE',allStates:'All states',districtLabel:'DISTRICT',anyDistrict:'Any district',searchButton:'See prices',statusNeedKey:'Connect a free data.gov.in key to load official prices',statusLoading:'Getting the latest available government reports…',statusConnected:'Connected to official AGMARKNET reports',statusError:'Could not load official data. Check your key or try again.',statusNoResults:'No matching reports found in the available data.',emptyTitle:'Prices, without the guesswork',emptyText:'Add your free data.gov.in API key in settings to see real mandi reports. No sample prices, ever.',connectButton:'Connect data source',resultsTitle:'Market reports',unitNote:'Prices shown per quintal (100 kg)',thMarket:'MARKET',thDistrict:'DISTRICT · STATE',thDate:'ARRIVAL DATE',thMin:'MIN',thModal:'MODAL PRICE',thMax:'MAX',sourceLabel:'Source: AGMARKNET · Government of India',historyEyebrow:'A LITTLE CONTEXT GOES A LONG WAY',historyTitle:'Follow the price over time',historyText:'See reported mandi prices from previous days for your selected crop.',range30:'Recent reports',chartLabel:'MODAL PRICE · ₹ / QUINTAL',chartAwait:'Waiting for market data',chartEmpty:'Price history will appear here when real reports are available.',chartLegend:'Daily median across matching markets',chartSource:'Official daily reports',trustTitle:'Real reports. Clear source. Your call.',trustText:'Prices come from AGMARKNET, published by India’s Ministry of Agriculture through the open data portal. Reports are daily, and may arrive with a delay.',sourceLink:'View official source ↗',footerText:'Made for clearer market decisions · Prices are indicative reports, not a guaranteed offer.',settingsEyebrow:'DATA SOURCE',settingsTitle:'Connect official prices',settingsText:'Enter a free API key from data.gov.in. Your key stays in this browser and is only sent to the official data.gov.in API.',getKey:'Get a free API key ↗',keyLabel:'YOUR DATA.GOV.IN API KEY',clearKey:'Clear saved key',saveConnect:'Save & connect →',privacyNote:'Stored only on this device. No account needed.',show:'Show',hide:'Hide',keyRequired:'Enter your data.gov.in API key to continue.',resultSingular:'market report',resultPlural:'market reports',dateUnknown:'Date not reported',dateUpdated:'Data checked',latest:'Latest reported modal price',chartDays:'report days shown',chartOneDay:'report day shown',noCrop:'All available crops',toastSaved:'API key saved on this device.',toastCleared:'Saved API key cleared.',fresh:'Most recent report',stale:'Latest available report',noPrices:'No price history in the available reports.',chartFilter:'Showing matching reports in the available dataset.',loading:'Loading…',errorKey:'The API rejected that key. Check it and try again.',errorNetwork:'The official data service could not be reached. Please try again later.',districtAny:'Any district'},
@@ -19,8 +16,6 @@ function applyLanguage() {
   document.documentElement.lang = language;
   document.querySelectorAll('[data-i18n]').forEach(el => { const text = tr(el.dataset.i18n); if (el.tagName === 'INPUT') el.placeholder = text; else el.innerHTML = text; });
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => el.placeholder = tr(el.dataset.i18nPlaceholder));
-  document.querySelector('#toggle-key').textContent = tr($('api-key').type === 'password' ? 'show' : 'hide');
-  if (localStorage.getItem(KEY_STORE)) $('status-text').textContent = tr('statusConnected');
 }
 function formatPrice(value) { const n = Number(value); return Number.isFinite(n) ? new Intl.NumberFormat(language === 'en' ? 'en-IN' : language === 'hi' ? 'hi-IN' : 'mr-IN', {maximumFractionDigits:0}).format(n) : '—'; }
 function dateValue(raw) { const s = String(raw || '').trim(); let m = s.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/); if (m) return new Date(+m[3], +m[2]-1, +m[1]); const d = new Date(s); return Number.isNaN(+d) ? null : d; }
@@ -28,11 +23,12 @@ function formatDate(raw) { const d = dateValue(raw); return d ? new Intl.DateTim
 function normalise(r) { return {state:r.state || '', district:r.district || '', market:r.market || '', commodity:r.commodity || '', variety:r.variety || '', grade:r.grade || '', date:r.arrival_date || '', min:r.min_price, max:r.max_price, modal:r.modal_price}; }
 function setStatus(kind, text) { $('status-text').textContent = text; $('status-dot').className = `status-dot ${kind || ''}`; }
 function showToast(text) { const t=$('toast'); t.textContent=text; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600); }
-function queryUrl(key, filters={}) { const url = new URL(API_BASE); url.searchParams.set('api-key',key); url.searchParams.set('format','json'); url.searchParams.set('limit','1000'); url.searchParams.set('sort[arrival_date]','desc'); for (const [field,value] of Object.entries(filters)) if (value) url.searchParams.set(`filters[${field.toLowerCase()}]`,value); return url; }
-async function getRecords(key,filters={}) {
-  const res = await fetch(queryUrl(key,filters), {headers:{Accept:'application/json'}});
+async function getRecords(filters={}) {
+  const url=new URL('/api/prices',location.origin);
+  for(const [field,value] of Object.entries(filters))if(value)url.searchParams.set(field.toLowerCase(),value);
+  const res = await fetch(url, {headers:{Accept:'application/json'}});
   const data = await res.json().catch(()=>({}));
-  if (!res.ok || data.status === 'error' || data.message === 'Invalid API key') { const e=new Error(data.message || `HTTP ${res.status}`); e.keyIssue=res.status===401 || /key/i.test(e.message); throw e; }
+  if (!res.ok || data.status === 'error') { const e=new Error(data.message || `HTTP ${res.status}`); e.keyIssue=res.status===503; throw e; }
   if (!Array.isArray(data.records)) throw new Error(data.message || 'No records returned');
   return data.records.map(normalise);
 }
@@ -71,19 +67,18 @@ function renderChart(records) {
   $('chart-area').innerHTML=`<svg viewBox="0 0 ${width} ${height+8}" preserveAspectRatio="none" role="img" aria-label="${esc(tr('chartLegend'))}"><defs><linearGradient id="priceFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#79a375" stop-opacity=".22"/><stop offset="1" stop-color="#79a375" stop-opacity="0"/></linearGradient></defs><path d="${area}" fill="url(#priceFill)"/><path d="${line}" fill="none" stroke="#4d8052" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>${xy.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="#fff" stroke="#4d8052" stroke-width="2" vector-effect="non-scaling-stroke"/>`).join('')}${tickLabels}</svg>`;
 }
 async function loadPrices({force=false}={}) {
-  const key=localStorage.getItem(KEY_STORE); if(!key){setStatus('',tr('statusNeedKey'));$('empty-state').classList.remove('hidden');$('results').classList.add('hidden');return;}
   setStatus('',tr('statusLoading'));$('refresh').disabled=true;
   try {
     const state=$('state-filter').value;
     const crop=$('crop-search').value.trim();
     // Load the official daily dataset with an optional state filter. The UI only derives
     // aggregates from returned records; it does not manufacture prices or history.
-    allRecords=await getRecords(key,{...(state?{State:state}:{}),...(crop?{Commodity:crop}:{})});
+    allRecords=await getRecords({...(state?{State:state}:{}),...(crop?{Commodity:crop}:{})});
     populateFilters(allRecords);
     const chosen=selectedRecords(); latestRecords=chosen; displayResults(chosen);
     setStatus('connected',chosen.length?tr('statusConnected'):tr('statusNoResults'));
   } catch(e) {
-    const msg=e.keyIssue?tr('errorKey'):tr('errorNetwork');setStatus('error',e.keyIssue?tr('statusError'):msg);
+    const msg=e.keyIssue?'Add your data.gov.in API key to .env, then restart the server.':tr('errorNetwork');setStatus('error',msg);
     $('empty-state').classList.remove('hidden');$('results').classList.add('hidden');$('empty-state').querySelector('p').textContent=msg;
   } finally {$('refresh').disabled=false;}
 }
@@ -91,7 +86,7 @@ function applyFilters() {
   if(!allRecords.length){loadPrices();return;}
   const filtered=selectedRecords();latestRecords=filtered;displayResults(filtered);setStatus('connected',filtered.length?tr('statusConnected'):tr('statusNoResults'));
 }
-function openSettings(){const d=$('settings-dialog');$('api-key').value='';$('key-error').classList.add('hidden');if(!d.open)d.showModal();}
+function openSettings(){const d=$('settings-dialog');if(!d.open)d.showModal();}
 
 document.addEventListener('DOMContentLoaded',()=>{
   $('language').value=language;applyLanguage();
@@ -101,8 +96,5 @@ document.addEventListener('DOMContentLoaded',()=>{
   $('crop-search').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();loadPrices();}});
   $('state-filter').addEventListener('change',()=>{if(allRecords.length)loadPrices();});
   $('district-filter').addEventListener('change',applyFilters);
-  $('toggle-key').addEventListener('click',()=>{$('api-key').type=$('api-key').type==='password'?'text':'password';$('toggle-key').textContent=tr($('api-key').type==='password'?'show':'hide');});
-  $('save-key').addEventListener('click',()=>{const key=$('api-key').value.trim();if(!key){$('key-error').textContent=tr('keyRequired');$('key-error').classList.remove('hidden');return;}localStorage.setItem(KEY_STORE,key);$('settings-dialog').close();showToast(tr('toastSaved'));loadPrices();});
-  $('clear-key').addEventListener('click',()=>{localStorage.removeItem(KEY_STORE);allRecords=[];latestRecords=[];$('settings-dialog').close();setStatus('',tr('statusNeedKey'));$('results').classList.add('hidden');$('empty-state').classList.remove('hidden');$('last-updated').textContent='';$('chart-area').innerHTML=`<div class="chart-empty">${esc(tr('chartEmpty'))}</div>`;$('chart-latest').textContent='—';$('chart-period').textContent=tr('chartAwait');showToast(tr('toastCleared'));});
-  if(localStorage.getItem(KEY_STORE))loadPrices();
+  loadPrices();
 });
