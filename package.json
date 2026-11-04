@@ -4,9 +4,10 @@
   "private": true,
   "description": "Ann Setu — Mobile-first Indian mandi price viewer powered by AGMARKNET",
   "scripts": {
-    "start": "node --env-file=.env server.js"
+    "start": "node --env-file=.env server.js",
+    "build": "echo 'Build complete'"
   },
   "engines": {
-    "node": ">=20.6.0"
+    "node": "20.x"
   }
 }

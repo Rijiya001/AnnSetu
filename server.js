@@ -4,7 +4,8 @@ const path = require('node:path');
 
 const ROOT = __dirname;
 const PORT = Number(process.env.PORT || 3000);
-let currentKey = (process.env.DATA_GOV_IN_API_KEY || '').trim();
+const DEFAULT_KEY = '579b464db66ec23bdd00000153a305cfec644f46529532df2fa82913';
+let currentKey = (process.env.DATA_GOV_IN_API_KEY || DEFAULT_KEY).trim();
 const RESOURCE = '9ef84268-d588-465a-a308-a864a43d0070';
 const MIME = {
   '.html': 'text/html; charset=utf-8',

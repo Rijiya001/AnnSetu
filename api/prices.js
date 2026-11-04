@@ -1,4 +1,5 @@
 const RESOURCE = '9ef84268-d588-465a-a308-a864a43d0070';
+const DEFAULT_KEY = '579b464db66ec23bdd00000153a305cfec644f46529532df2fa82913';
 
 module.exports = async function handler(req, res) {
   // CORS headers
@@ -7,13 +8,14 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
-    res.writeHead(204);
+    res.statusCode = 204;
     return res.end();
   }
 
-  const apiKey = (process.env.DATA_GOV_IN_API_KEY || '').trim();
+  const apiKey = (process.env.DATA_GOV_IN_API_KEY || DEFAULT_KEY).trim();
   if (!apiKey) {
-    res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.statusCode = 500;
     return res.end(JSON.stringify({
       error: 'API key not configured',
       message: 'Please set DATA_GOV_IN_API_KEY in your Vercel Environment Variables.'
@@ -42,18 +44,18 @@ module.exports = async function handler(req, res) {
   try {
     const upstream = await fetch(api, {
       headers: { Accept: 'application/json' },
-      signal: AbortSignal.timeout(20000)
+      signal: AbortSignal.timeout(25000)
     });
     const body = await upstream.text();
 
-    res.writeHead(upstream.status, {
-      'Content-Type': upstream.headers.get('content-type') || 'application/json; charset=utf-8',
-      'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600'
-    });
+    res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/json; charset=utf-8');
+    res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    res.statusCode = upstream.status;
     return res.end(body);
   } catch (error) {
     const causeCode = error?.cause?.code || error?.code || error?.name || 'unknown';
-    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.statusCode = 502;
     return res.end(JSON.stringify({
       error: 'Upstream unavailable',
       message: `The official data.gov.in request failed (${causeCode}).`

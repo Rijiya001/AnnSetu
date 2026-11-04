@@ -11,12 +11,18 @@ A mobile-first Indian vegetable & fruit mandi price viewer powered by official G
 
 ## Deploy to Vercel
 
-1. Push this repository to GitHub.
-2. Go to [vercel.com](https://vercel.com) and click **"Add New Project"**.
-3. Select your **Ann Setu** repository.
-4. In the **Environment Variables** section, add:
+1. Push this repository to GitHub:
+   ```bash
+   git add .
+   git commit -m "Configure Vercel deployment and dark mode"
+   git push origin main
+   ```
+2. Go to [vercel.com](https://vercel.com) and click **"Add New Project"** (or **"Import"**).
+3. Select your **AnnSetu** repository.
+4. (Optional) In the **Environment Variables** section, you can add your own key:
    - **Key:** `DATA_GOV_IN_API_KEY`
    - **Value:** `your_data_gov_in_api_key`
+   *(A working AGMARKNET government key is pre-configured as a fallback, so the project works immediately even without configuring environment variables!)*
 5. Click **Deploy**.
 
 That's it! Your site will be live on your Vercel URL (e.g., `https://ann-setu.vercel.app`) and serve official prices worldwide without asking visitors for any API key.
