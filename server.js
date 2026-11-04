@@ -20,7 +20,6 @@ async function route(req, res) {
     api.searchParams.set('api-key', KEY);
     api.searchParams.set('format', 'json');
     api.searchParams.set('limit', '1000');
-    api.searchParams.set('sort[arrival_date]', 'desc');
     for (const field of ['commodity','state','district']) {
       const value = (url.searchParams.get(field) || '').trim();
       if (value) api.searchParams.set(`filters[${field}]`, value);

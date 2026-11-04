@@ -21,6 +21,7 @@ function formatPrice(value) { const n = Number(value); return Number.isFinite(n)
 function dateValue(raw) { const s = String(raw || '').trim(); let m = s.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/); if (m) return new Date(+m[3], +m[2]-1, +m[1]); const d = new Date(s); return Number.isNaN(+d) ? null : d; }
 function formatDate(raw) { const d = dateValue(raw); return d ? new Intl.DateTimeFormat(language === 'en' ? 'en-IN' : language === 'hi' ? 'hi-IN' : 'mr-IN', {day:'numeric',month:'short',year:'numeric'}).format(d) : tr('dateUnknown'); }
 function normalise(r) { return {state:r.state || '', district:r.district || '', market:r.market || '', commodity:r.commodity || '', variety:r.variety || '', grade:r.grade || '', date:r.arrival_date || '', min:r.min_price, max:r.max_price, modal:r.modal_price}; }
+function compareArrivalDateNewest(a,b) { return (dateValue(b.date)?.getTime() || 0) - (dateValue(a.date)?.getTime() || 0); }
 function setStatus(kind, text) { $('status-text').textContent = text; $('status-dot').className = `status-dot ${kind || ''}`; }
 function showToast(text) { const t=$('toast'); t.textContent=text; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600); }
 async function getRecords(filters={}) {
@@ -73,7 +74,7 @@ async function loadPrices({force=false}={}) {
     const crop=$('crop-search').value.trim();
     // Load the official daily dataset with an optional state filter. The UI only derives
     // aggregates from returned records; it does not manufacture prices or history.
-    allRecords=await getRecords({...(state?{State:state}:{}),...(crop?{Commodity:crop}:{})});
+    allRecords=(await getRecords({...(state?{State:state}:{}),...(crop?{Commodity:crop}:{})})).sort(compareArrivalDateNewest);
     populateFilters(allRecords);
     const chosen=selectedRecords(); latestRecords=chosen; displayResults(chosen);
     setStatus('connected',chosen.length?tr('statusConnected'):tr('statusNoResults'));
