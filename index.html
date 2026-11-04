@@ -4,273 +4,168 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#14532d" />
-  <meta name="description" content="Ann Setu — Official daily APMC mandi prices and benchmark rates across India from AGMARKNET." />
-  <title>Ann Setu — National Mandi Price Discovery Portal</title>
+  <meta name="theme-color" content="#f7f8f4" />
+  <meta name="description" content="Ann Setu — Clear, daily mandi prices from India's official AGMARKNET data." />
+  <title>Ann Setu — Mandi prices, made clear</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="alternate icon" type="image/x-icon" href="favicon.ico" />
   <link rel="apple-touch-icon" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <script src="app.js" defer></script>
 </head>
 
 <body>
-  <!-- Sovereign National Header Ribbon -->
-  <aside class="gov-ribbon" aria-label="Official Government Header">
-    <div class="gov-tricolor" aria-hidden="true"></div>
-    <div class="gov-ribbon-bar">
-      <div class="gov-ribbon-left">
-        <span class="gov-emblem" aria-hidden="true">🏛️</span>
-        <span class="gov-text">भारत सरकार · Government of India</span>
-        <span class="gov-sep">|</span>
-        <span class="gov-sub">Ministry of Agriculture &amp; Farmers Welfare</span>
-      </div>
-      <div class="gov-ribbon-right">
-        <span class="gov-badge"><span class="pulse-dot"></span>Official AGMARKNET Public Feed</span>
-      </div>
-    </div>
-  </aside>
-
-  <!-- Modern Glassmorphic Topbar -->
   <header class="topbar">
-    <div class="topbar-inner">
-      <a class="brand notranslate" href="#" aria-label="Ann Setu home">
-        <span class="brand-mark">a</span>
-        <div class="brand-text">
-          <span class="brand-title">Ann<span class="brand-light">Setu</span></span>
-          <span class="brand-tag">National Mandi Portal</span>
-        </div>
-      </a>
-      <nav class="top-nav" aria-label="Main navigation">
-        <a href="#prices">Market Prices</a>
-        <a href="#history">Price Range &amp; Trends</a>
-        <a href="#about">Official Source</a>
-      </nav>
-      <div class="top-actions">
-        <div class="language-picker notranslate" title="Select language">
-          <span class="lang-icon" aria-hidden="true">文</span>
-          <span class="lang-label" id="lang-current">English</span>
-          <svg class="lang-arrow" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2.5 4.5L6 8l3.5-3.5"/>
-          </svg>
-          <select id="language" aria-label="Select language" class="lang-select">
-            <option value="en">English</option>
-            <option value="hi">हिन्दी (Hindi)</option>
-            <option value="mr">मराठी (Marathi)</option>
-            <option value="gu">ગુજરાતી (Gujarati)</option>
-            <option value="bn">বাংলা (Bengali)</option>
-            <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
-            <option value="ta">தமிழ் (Tamil)</option>
-            <option value="te">తెలుగు (Telugu)</option>
-            <option value="kn">ಕನ್ನಡ (Kannada)</option>
-            <option value="ml">മലയാളം (Malayalam)</option>
-            <option value="ur">اردو (Urdu)</option>
-            <option value="or">ଓଡ଼ିଆ (Odia)</option>
-          </select>
-        </div>
+    <a class="brand notranslate" href="#" aria-label="Ann Setu home"><span class="brand-mark">a</span><span>ann<span
+          class="brand-light">setu</span></span></a>
+    <nav class="top-nav" aria-label="Main navigation"><a href="#prices">Market prices</a><a
+        href="#history">Price history</a><a href="#about">About the data</a>
+    </nav>
+    <div class="top-actions">
+      <div class="language-picker notranslate" title="Select language">
+        <span class="lang-icon" aria-hidden="true">文</span>
+        <span class="lang-label" id="lang-current">English</span>
+        <svg class="lang-arrow" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2.5 4.5L6 8l3.5-3.5"/>
+        </svg>
+        <select id="language" aria-label="Select language" class="lang-select">
+          <option value="en">English</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="mr">मराठी (Marathi)</option>
+          <option value="gu">ગુજરાતી (Gujarati)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+          <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="kn">ಕನ್ನಡ (Kannada)</option>
+          <option value="ml">മലയാളം (Malayalam)</option>
+          <option value="ur">اردو (Urdu)</option>
+          <option value="or">ଓଡ଼ିଆ (Odia)</option>
+        </select>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- Civic Tech Hero Section -->
     <section class="hero">
-      <div class="hero-inner">
-        <div class="hero-copy">
-          <div class="eyebrow">
-            <span class="live-dot"></span>
-            <span>INDIA'S OFFICIAL AGMARKNET MANDI RATES · DIRECT FEED</span>
-          </div>
-          <h1>National Mandi Exchange.<br /><em>Transparent APMC Prices for India.</em></h1>
-          <p>Real-time daily mandi reports from APMCs across 28 States and Union Territories. Benchmark modal rates, arrival quantities, and verified price discovery for farmers, traders, and citizens.</p>
-          <div class="hero-kpis">
-            <div class="kpi-card">
-              <span class="kpi-icon">🏛️</span>
-              <div>
-                <strong>2,400+ Mandis</strong>
-                <span>Official APMC network</span>
-              </div>
-            </div>
-            <div class="kpi-card">
-              <span class="kpi-icon">🌾</span>
-              <div>
-                <strong>100+ Crops</strong>
-                <span>Vegetables, Fruits, Grains</span>
-              </div>
-            </div>
-            <div class="kpi-card">
-              <span class="kpi-icon">🛡️</span>
-              <div>
-                <strong>Zero Markups</strong>
-                <span>Official government bulletin</span>
-              </div>
-            </div>
-          </div>
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="live-dot"></span><span>INDIA'S MANDI PRICES · STRAIGHT
+            FROM THE SOURCE</span></div>
+        <h1>Know your market.<br /><em>Choose your moment.</em></h1>
+        <p>Compare today's reported prices and see how they have moved. Clear information for
+          better selling and fairer buying.</p>
+        <div class="hero-note"><span class="note-icon">↗</span><span>Official market reports, with
+            the date and source always in view.</span></div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="sun"></div>
+        <div class="art-leaf leaf-one"></div>
+        <div class="art-leaf leaf-two"></div>
+        <div class="basket"><span class="produce p-tomato"></span><span class="produce p-eggplant"></span><span
+            class="produce p-citrus"></span><span class="produce p-pepper"></span><span class="basket-weave"></span>
         </div>
-
-        <div class="hero-dashboard-card" aria-label="National Market Overview">
-          <div class="dash-card-header">
-            <div>
-              <span class="dash-badge">LIVE APMC BULLETIN</span>
-              <h3>National Market Pulse</h3>
-            </div>
-            <span class="dash-status-dot">● Active</span>
-          </div>
-          <div class="dash-stats-grid">
-            <div class="dash-stat">
-              <span class="dash-stat-label">DAILY ARRIVALS</span>
-              <strong class="dash-stat-val notranslate">1,000+</strong>
-              <span class="dash-stat-sub">Official mandi lots</span>
-            </div>
-            <div class="dash-stat">
-              <span class="dash-stat-label">MODAL BENCHMARK</span>
-              <strong class="dash-stat-val text-green notranslate">100% Real</strong>
-              <span class="dash-stat-sub">Direct APMC trading</span>
-            </div>
-            <div class="dash-stat">
-              <span class="dash-stat-label">DATA AUTHORITY</span>
-              <strong class="dash-stat-val notranslate">AGMARKNET</strong>
-              <span class="dash-stat-sub">Ministry of Agriculture</span>
-            </div>
-            <div class="dash-stat">
-              <span class="dash-stat-label">ACCESSIBILITY</span>
-              <strong class="dash-stat-val notranslate">12 Languages</strong>
-              <span class="dash-stat-sub">Pan-India coverage</span>
-            </div>
-          </div>
-          <div class="dash-card-footer">
-            <span class="dash-footer-shield">🛡️ Verified under National Data Sharing Policy</span>
-            <span class="dash-footer-stamp">Direct data.gov.in API</span>
-          </div>
-        </div>
+        <div class="art-ground"></div>
+        <div class="art-label"><span class="live-dot"></span>FARM TO MARKET</div>
       </div>
     </section>
 
-    <!-- Unified Workspace & Search Command Center -->
     <section class="workspace" id="prices">
       <div class="section-heading">
         <div>
-          <div class="eyebrow muted">CENTRAL MANDI COMMODITY SEARCH</div>
-          <h2>Today's Mandi Prices</h2>
-          <p class="section-desc">Search and compare daily APMC reports across states and districts.</p>
-        </div>
-        <button class="refresh-button" id="refresh"><span class="refresh-icon">↻</span><span>Refresh data</span></button>
+          <div class="eyebrow muted">YOUR LOCAL MARKET, AT A GLANCE</div>
+          <h2>Today's mandi prices</h2>
+        </div><button class="refresh-button" id="refresh"><span class="refresh-icon">↻</span><span>Refresh data</span></button>
       </div>
-
-      <div class="search-command-card">
-        <div class="filters">
-          <label class="filter-field crop-field">
-            <span class="field-tag">WHAT ARE YOU SELLING / BUYING?</span>
-            <span class="input-wrap">
-              <span class="search-icon">⌕</span>
-              <input id="crop-search" list="crops" placeholder="Search a fruit, vegetable, or grain (e.g. Potato, Apple, Onion)..." autocomplete="off" />
-              <datalist id="crops"></datalist>
-            </span>
-          </label>
-          <label class="filter-field">
-            <span class="field-tag">STATE / UT</span>
-            <select id="state-filter">
-              <option value="">All states</option>
-            </select>
-          </label>
-          <label class="filter-field">
-            <span class="field-tag">DISTRICT MANDI</span>
-            <select id="district-filter" disabled>
-              <option value="">Any district</option>
-            </select>
-          </label>
-          <button class="search-button" id="search-button">
-            <span>See prices</span>
-            <span class="btn-arrow">→</span>
-          </button>
-        </div>
+      <div class="filters"><label class="filter-field crop-field"><span>WHAT ARE YOU
+            SELLING?</span><span class="input-wrap"><span class="search-icon">⌕</span><input id="crop-search"
+              list="crops" placeholder="Search a fruit or vegetable"
+              autocomplete="off" /><datalist id="crops"></datalist></span></label><label class="filter-field"><span>STATE</span><select id="state-filter">
+            <option value="">All states</option>
+          </select></label><label class="filter-field"><span>DISTRICT</span><select
+            id="district-filter" disabled>
+            <option value="">Any district</option>
+          </select></label><button class="search-button" id="search-button">See prices
+          <span>→</span></button></div>
+      <div class="category-tabs" role="tablist" aria-label="Commodity categories">
+        <button type="button" class="cat-tab active" data-category="all">All Produce</button>
+        <button type="button" class="cat-tab" data-category="veg">🥬 Vegetables</button>
+        <button type="button" class="cat-tab" data-category="fruit">🍎 Fruits</button>
       </div>
+      <div class="crop-chips" id="crop-chips" aria-label="Quick commodity filters">
+        <button type="button" class="chip active" data-crop="" data-category="all">All Items</button>
 
-      <div class="commodity-navigation">
-        <div class="category-tabs" role="tablist" aria-label="Commodity categories">
-          <button type="button" class="cat-tab active" data-category="all">All Produce</button>
-          <button type="button" class="cat-tab" data-category="veg">🥬 Vegetables</button>
-          <button type="button" class="cat-tab" data-category="fruit">🍎 Fruits</button>
-        </div>
-        <div class="crop-chips" id="crop-chips" aria-label="Quick commodity filters">
-          <button type="button" class="chip active" data-crop="" data-category="all">All Items</button>
+        <!-- Vegetables -->
+        <button type="button" class="chip" data-crop="Potato" data-category="veg">🥔 Potato</button>
+        <button type="button" class="chip" data-crop="Tomato" data-category="veg">🍅 Tomato</button>
+        <button type="button" class="chip" data-crop="Onion" data-category="veg">🧅 Onion</button>
+        <button type="button" class="chip" data-crop="Green Chilli" data-category="veg">🌶️ Green Chilli</button>
+        <button type="button" class="chip" data-crop="Brinjal" data-category="veg">🍆 Brinjal</button>
+        <button type="button" class="chip" data-crop="Garlic" data-category="veg">🧄 Garlic</button>
+        <button type="button" class="chip" data-crop="Ginger(Green)" data-category="veg">🫚 Ginger</button>
+        <button type="button" class="chip" data-crop="Carrot" data-category="veg">🥕 Carrot</button>
+        <button type="button" class="chip" data-crop="Cabbage" data-category="veg">🥬 Cabbage</button>
+        <button type="button" class="chip" data-crop="Cauliflower" data-category="veg">🥦 Cauliflower</button>
+        <button type="button" class="chip" data-crop="Cucumbar(Kheera)" data-category="veg">🥒 Cucumber</button>
+        <button type="button" class="chip" data-crop="Capsicum" data-category="veg">🫑 Capsicum</button>
+        <button type="button" class="chip" data-crop="Spinach" data-category="veg">🌿 Spinach (Palak)</button>
+        <button type="button" class="chip" data-crop="Green Peas" data-category="veg">🟢 Peas</button>
+        <button type="button" class="chip" data-crop="Bhindi(Ladies Finger)" data-category="veg">🫛 Bhindi (Okra)</button>
+        <button type="button" class="chip" data-crop="Bottle gourd" data-category="veg">🥣 Bottle Gourd</button>
+        <button type="button" class="chip" data-crop="Bitter gourd" data-category="veg">🥒 Bitter Gourd</button>
+        <button type="button" class="chip" data-crop="Pumpkin" data-category="veg">🎃 Pumpkin</button>
+        <button type="button" class="chip" data-crop="Raddish" data-category="veg">🥢 Radish</button>
+        <button type="button" class="chip" data-crop="Beetroot" data-category="veg">🔴 Beetroot</button>
+        <button type="button" class="chip" data-crop="Coriander(Leaves)" data-category="veg">🌿 Coriander</button>
+        <button type="button" class="chip" data-crop="Methi(Leaves)" data-category="veg">🍃 Methi</button>
+        <button type="button" class="chip" data-crop="Mint(Pudina)" data-category="veg">🍃 Mint</button>
+        <button type="button" class="chip" data-crop="Drumstick" data-category="veg">🥁 Drumstick</button>
+        <button type="button" class="chip" data-crop="Sweet Potato" data-category="veg">🍠 Sweet Potato</button>
+        <button type="button" class="chip" data-crop="Mushroom" data-category="veg">🍄 Mushroom</button>
+        <button type="button" class="chip" data-crop="Sweet Corn " data-category="veg">🌽 Sweet Corn</button>
+        <button type="button" class="chip" data-crop="Lemon" data-category="veg">🍋 Lemon</button>
+        <button type="button" class="chip" data-crop="Ashgourd" data-category="veg">🍈 Ashgourd</button>
+        <button type="button" class="chip" data-crop="Ridgeguard(Tori)" data-category="veg">🥒 Ridge Gourd</button>
+        <button type="button" class="chip" data-crop="Elephant Yam(Suran)/Amorphophallus" data-category="veg">🥔 Suran / Yam</button>
+        <button type="button" class="chip" data-crop="Little gourd(Kundru)" data-category="veg">🥬 Kundru</button>
+        <button type="button" class="chip" data-crop="Cluster beans" data-category="veg">🫘 Cluster Beans</button>
+        <button type="button" class="chip" data-crop="Cowpea(Veg)" data-category="veg">🥗 Cowpea</button>
 
-          <!-- Vegetables -->
-          <button type="button" class="chip" data-crop="Potato" data-category="veg">🥔 Potato</button>
-          <button type="button" class="chip" data-crop="Tomato" data-category="veg">🍅 Tomato</button>
-          <button type="button" class="chip" data-crop="Onion" data-category="veg">🧅 Onion</button>
-          <button type="button" class="chip" data-crop="Green Chilli" data-category="veg">🌶️ Green Chilli</button>
-          <button type="button" class="chip" data-crop="Brinjal" data-category="veg">🍆 Brinjal</button>
-          <button type="button" class="chip" data-crop="Garlic" data-category="veg">🧄 Garlic</button>
-          <button type="button" class="chip" data-crop="Ginger(Green)" data-category="veg">🫚 Ginger</button>
-          <button type="button" class="chip" data-crop="Carrot" data-category="veg">🥕 Carrot</button>
-          <button type="button" class="chip" data-crop="Cabbage" data-category="veg">🥬 Cabbage</button>
-          <button type="button" class="chip" data-crop="Cauliflower" data-category="veg">🥦 Cauliflower</button>
-          <button type="button" class="chip" data-crop="Cucumbar(Kheera)" data-category="veg">🥒 Cucumber</button>
-          <button type="button" class="chip" data-crop="Capsicum" data-category="veg">🫑 Capsicum</button>
-          <button type="button" class="chip" data-crop="Spinach" data-category="veg">🌿 Spinach (Palak)</button>
-          <button type="button" class="chip" data-crop="Green Peas" data-category="veg">🟢 Peas</button>
-          <button type="button" class="chip" data-crop="Bhindi(Ladies Finger)" data-category="veg">🫛 Bhindi (Okra)</button>
-          <button type="button" class="chip" data-crop="Bottle gourd" data-category="veg">🥣 Bottle Gourd</button>
-          <button type="button" class="chip" data-crop="Bitter gourd" data-category="veg">🥒 Bitter Gourd</button>
-          <button type="button" class="chip" data-crop="Pumpkin" data-category="veg">🎃 Pumpkin</button>
-          <button type="button" class="chip" data-crop="Raddish" data-category="veg">🥢 Radish</button>
-          <button type="button" class="chip" data-crop="Beetroot" data-category="veg">🔴 Beetroot</button>
-          <button type="button" class="chip" data-crop="Coriander(Leaves)" data-category="veg">🌿 Coriander</button>
-          <button type="button" class="chip" data-crop="Methi(Leaves)" data-category="veg">🍃 Methi</button>
-          <button type="button" class="chip" data-crop="Mint(Pudina)" data-category="veg">🍃 Mint</button>
-          <button type="button" class="chip" data-crop="Drumstick" data-category="veg">🥁 Drumstick</button>
-          <button type="button" class="chip" data-crop="Sweet Potato" data-category="veg">🍠 Sweet Potato</button>
-          <button type="button" class="chip" data-crop="Mushroom" data-category="veg">🍄 Mushroom</button>
-          <button type="button" class="chip" data-crop="Sweet Corn " data-category="veg">🌽 Sweet Corn</button>
-          <button type="button" class="chip" data-crop="Lemon" data-category="veg">🍋 Lemon</button>
-          <button type="button" class="chip" data-crop="Ashgourd" data-category="veg">🍈 Ashgourd</button>
-          <button type="button" class="chip" data-crop="Ridgeguard(Tori)" data-category="veg">🥒 Ridge Gourd</button>
-          <button type="button" class="chip" data-crop="Elephant Yam(Suran)/Amorphophallus" data-category="veg">🥔 Suran / Yam</button>
-          <button type="button" class="chip" data-crop="Little gourd(Kundru)" data-category="veg">🥬 Kundru</button>
-          <button type="button" class="chip" data-crop="Cluster beans" data-category="veg">🫘 Cluster Beans</button>
-          <button type="button" class="chip" data-crop="Cowpea(Veg)" data-category="veg">🥗 Cowpea</button>
-
-          <!-- Fruits -->
-          <button type="button" class="chip" data-crop="Apple" data-category="fruit">🍎 Apple</button>
-          <button type="button" class="chip" data-crop="Banana" data-category="fruit">🍌 Banana</button>
-          <button type="button" class="chip" data-crop="Mango(Raw-Ripe)" data-category="fruit">🥭 Mango</button>
-          <button type="button" class="chip" data-crop="Orange" data-category="fruit">🍊 Orange</button>
-          <button type="button" class="chip" data-crop="Mousambi(Sweet Lime)" data-category="fruit">🍈 Mosambi</button>
-          <button type="button" class="chip" data-crop="Grapes" data-category="fruit">🍇 Grapes</button>
-          <button type="button" class="chip" data-crop="Water Melon" data-category="fruit">🍉 Watermelon</button>
-          <button type="button" class="chip" data-crop="Papaya" data-category="fruit">🍈 Papaya</button>
-          <button type="button" class="chip" data-crop="Pineapple" data-category="fruit">🍍 Pineapple</button>
-          <button type="button" class="chip" data-crop="Coconut" data-category="fruit">🥥 Coconut</button>
-          <button type="button" class="chip" data-crop="Guava" data-category="fruit">🍐 Guava</button>
-          <button type="button" class="chip" data-crop="Pomegranate" data-category="fruit">🌰 Pomegranate</button>
-          <button type="button" class="chip" data-crop="Chikoos(Sapota)" data-category="fruit">🍈 Chikoo</button>
-          <button type="button" class="chip" data-crop="Karbuja(Musk Melon)" data-category="fruit">🍈 Muskmelon</button>
-          <button type="button" class="chip" data-crop="Custard Apple(Sharifa)" data-category="fruit">🍈 Custard Apple</button>
-          <button type="button" class="chip" data-crop="Amla(Nelli Kai)" data-category="fruit">🟢 Amla</button>
-          <button type="button" class="chip" data-crop="Kinnow" data-category="fruit">🍊 Kinnow</button>
-          <button type="button" class="chip" data-crop="Strawberry" data-category="fruit">🍓 Strawberry</button>
-          <button type="button" class="chip" data-crop="Tender Coconut" data-category="fruit">🥥 Tender Coconut</button>
-        </div>
+        <!-- Fruits -->
+        <button type="button" class="chip" data-crop="Apple" data-category="fruit">🍎 Apple</button>
+        <button type="button" class="chip" data-crop="Banana" data-category="fruit">🍌 Banana</button>
+        <button type="button" class="chip" data-crop="Mango(Raw-Ripe)" data-category="fruit">🥭 Mango</button>
+        <button type="button" class="chip" data-crop="Orange" data-category="fruit">🍊 Orange</button>
+        <button type="button" class="chip" data-crop="Mousambi(Sweet Lime)" data-category="fruit">🍈 Mosambi</button>
+        <button type="button" class="chip" data-crop="Grapes" data-category="fruit">🍇 Grapes</button>
+        <button type="button" class="chip" data-crop="Water Melon" data-category="fruit">🍉 Watermelon</button>
+        <button type="button" class="chip" data-crop="Papaya" data-category="fruit">🍈 Papaya</button>
+        <button type="button" class="chip" data-crop="Pineapple" data-category="fruit">🍍 Pineapple</button>
+        <button type="button" class="chip" data-crop="Coconut" data-category="fruit">🥥 Coconut</button>
+        <button type="button" class="chip" data-crop="Guava" data-category="fruit">🍐 Guava</button>
+        <button type="button" class="chip" data-crop="Pomegranate" data-category="fruit">🌰 Pomegranate</button>
+        <button type="button" class="chip" data-crop="Chikoos(Sapota)" data-category="fruit">🍈 Chikoo</button>
+        <button type="button" class="chip" data-crop="Karbuja(Musk Melon)" data-category="fruit">🍈 Muskmelon</button>
+        <button type="button" class="chip" data-crop="Custard Apple(Sharifa)" data-category="fruit">🍈 Custard Apple</button>
+        <button type="button" class="chip" data-crop="Amla(Nelli Kai)" data-category="fruit">🟢 Amla</button>
+        <button type="button" class="chip" data-crop="Kinnow" data-category="fruit">🍊 Kinnow</button>
+        <button type="button" class="chip" data-crop="Strawberry" data-category="fruit">🍓 Strawberry</button>
+        <button type="button" class="chip" data-crop="Tender Coconut" data-category="fruit">🥥 Tender Coconut</button>
       </div>
-
       <div class="notice-row">
-        <div class="source-status"><span class="status-dot" id="status-dot"></span><span id="status-text">Loading official AGMARKNET prices…</span></div>
-        <span class="updated-label" id="last-updated"></span>
+        <div class="source-status"><span class="status-dot" id="status-dot"></span><span id="status-text">Loading official AGMARKNET prices…</span></div><span
+          class="updated-label" id="last-updated"></span>
       </div>
-
       <div class="empty-state hidden" id="empty-state">
         <div class="empty-icon">⌕</div>
         <h3>No market reports found</h3>
         <p>No price reports found for this selection today. Try selecting another crop or choosing "All states".</p>
       </div>
-
-      <!-- Price Range & Market Trend Summary (Hidden by default, shown when a vegetable/fruit is selected) -->
+      <!-- Price Range & Market Trend Summary (Hidden by default, shown when a vegetable is selected) -->
       <div class="history-section hidden" id="history">
         <div class="history-heading">
           <div>
@@ -288,21 +183,18 @@
             <div class="chart-period" id="chart-period">Waiting for market data</div>
           </div>
           <div class="chart-area" id="chart-area">
-            <div class="chart-empty">Price history will appear here when real reports are available.</div>
+            <div class="chart-empty">Price history will appear here when real reports are
+              available.</div>
           </div>
-          <div class="chart-legend">
-            <span><i></i><span>Daily median across matching markets</span></span>
-            <span>Official daily reports</span>
-          </div>
+          <div class="chart-legend"><span><i></i><span>Daily median across matching
+                markets</span></span><span>Official daily reports</span></div>
         </div>
       </div>
 
-      <!-- Market Reports Table -->
       <div class="results hidden" id="results">
         <div class="results-top">
           <div>
-            <h3 id="results-title">Market reports</h3>
-            <span id="result-count"></span>
+            <h3 id="results-title">Market reports</h3><span id="result-count"></span>
           </div>
           <div class="unit-note">Prices shown per quintal (100 kg)</div>
         </div>
@@ -322,47 +214,23 @@
           </table>
         </div>
         <div class="mobile-cards" id="mobile-cards"></div>
-        <div class="table-footer">
-          <span>Source: AGMARKNET · Government of India</span>
-          <span id="data-freshness"></span>
-        </div>
+        <div class="table-footer"><span>Source: AGMARKNET · Government of India</span><span
+            id="data-freshness"></span></div>
       </div>
     </section>
 
-    <!-- Institutional Trust & Verification Strip -->
     <section class="trust-strip" id="about">
-      <div class="trust-strip-inner">
-        <div class="trust-icon">✓</div>
-        <div class="trust-content">
-          <h3>100% Authentic Government Data. Real APMC Reports.</h3>
-          <p>Prices come from AGMARKNET, published by India's Ministry of Agriculture through the Open Government Data Platform (data.gov.in). Reports are daily records straight from APMC mandis.</p>
-        </div>
-        <a class="trust-link" href="https://www.data.gov.in/resource/current-daily-price-various-commodities-various-markets-mandi" target="_blank" rel="noreferrer">
-          <span>View official source</span>
-          <span>↗</span>
-        </a>
-      </div>
+      <div class="trust-icon">✓</div>
+      <div>
+        <h3>Real reports. Clear source. Your call.</h3>
+        <p>Prices come from AGMARKNET, published by India's Ministry of Agriculture through the
+          open data portal. Reports are daily, and may arrive with a delay.</p>
+      </div><a href="https://www.data.gov.in/resource/current-daily-price-various-commodities-various-markets-mandi"
+        target="_blank" rel="noreferrer">View official source ↗</a>
     </section>
   </main>
-
-  <!-- Institutional Footer -->
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-left">
-        <span class="brand footer-brand notranslate">
-          <span class="brand-mark">a</span>
-          <div class="brand-text">
-            <span class="brand-title">Ann<span class="brand-light">Setu</span></span>
-            <span class="brand-tag">National Mandi Portal</span>
-          </div>
-        </span>
-        <p class="footer-mission">National Agricultural Price Intelligence &amp; APMC Mandi Discovery Platform.</p>
-      </div>
-      <div class="footer-right">
-        <span>Made for clearer market decisions · Indicative APMC reports published under the National Data Sharing and Accessibility Policy (NDSAP), Government of India.</span>
-      </div>
-    </div>
-  </footer>
+  <footer><span class="brand footer-brand notranslate"><span class="brand-mark">a</span><span>ann<span
+          class="brand-light">setu</span></span></span><span>Made for clearer market decisions · Prices are indicative reports, not a guaranteed offer.</span></footer>
 
   <div id="google_translate_element" style="display:none"></div>
   <script type="text/javascript">
