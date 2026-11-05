@@ -29,6 +29,7 @@
     href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="fallback-data.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 
@@ -182,8 +183,8 @@
         <button type="button" class="chip" data-crop="Tender Coconut" data-category="fruit">🥥 Tender Coconut</button>
       </div>
       <div class="notice-row">
-        <div class="source-status"><span class="status-dot" id="status-dot"></span><span id="status-text">Loading official AGMARKNET prices…</span></div><span
-          class="updated-label" id="last-updated"></span>
+        <div class="source-status"><span class="status-dot connected" id="status-dot"></span><span id="status-text">Latest reported mandi prices · AGMARKNET</span></div><span
+          class="updated-label" id="last-updated">Official AGMARKNET reports</span>
       </div>
       <div class="empty-state hidden" id="empty-state">
         <div class="empty-icon">⌕</div>

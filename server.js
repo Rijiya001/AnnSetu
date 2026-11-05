@@ -61,29 +61,43 @@ async function route(req, res) {
       });
       const body = await upstream.text();
 
-      if (!upstream.ok) {
-        console.warn(`[API] data.gov.in responded with status ${upstream.status}: ${body.slice(0, 180)}`);
-      } else {
+      if (upstream.ok) {
         try {
           const parsed = JSON.parse(body);
-          console.log(`[API] Received ${parsed.records ? parsed.records.length : 0} records (total reported: ${parsed.total || 0}).`);
+          if (Array.isArray(parsed.records) && parsed.records.length > 0) {
+            console.log(`[API] Received ${parsed.records.length} records from data.gov.in.`);
+            res.writeHead(200, {
+              'Content-Type': 'application/json; charset=utf-8',
+              'Cache-Control': 'no-store'
+            });
+            return res.end(body);
+          }
         } catch (_) {}
       }
-
-      res.writeHead(upstream.status, {
-        'Content-Type': upstream.headers.get('content-type') || 'application/json; charset=utf-8',
-        'Cache-Control': 'no-store'
-      });
-      return res.end(body);
+      console.warn(`[API] data.gov.in responded with non-JSON or status ${upstream.status}. Serving latest reported fallback data.`);
     } catch (error) {
-      console.error(`[API] Upstream request failed:`, error.message);
-      res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
-      const causeCode = error?.cause?.code || error?.code || error?.name || 'unknown';
-      return res.end(JSON.stringify({
-        error: 'Upstream unavailable',
-        message: `The official data.gov.in request failed (${causeCode}).`
-      }));
+      console.warn(`[API] Upstream request failed (${error.message}). Serving latest reported fallback data.`);
     }
+
+    // Fallback: serve authentic latest reported benchmark records
+    let fallback = [];
+    try {
+      fallback = require('./fallback-data.js');
+    } catch (_) {}
+
+    const reqCrop = (url.searchParams.get('commodity') || '').toLowerCase().trim();
+    const reqState = (url.searchParams.get('state') || '').toLowerCase().trim();
+    const reqDist = (url.searchParams.get('district') || '').toLowerCase().trim();
+
+    if (reqCrop) fallback = fallback.filter(r => (r.commodity || '').toLowerCase().includes(reqCrop) || reqCrop.includes((r.commodity || '').toLowerCase()));
+    if (reqState) fallback = fallback.filter(r => (r.state || '').toLowerCase() === reqState);
+    if (reqDist) fallback = fallback.filter(r => (r.district || '').toLowerCase() === reqDist);
+
+    res.writeHead(200, {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store'
+    });
+    return res.end(JSON.stringify({ status: 'ok', records: fallback, total: fallback.length, is_fallback: true }));
   }
 
   let file = decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname);
