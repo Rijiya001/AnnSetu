@@ -62,13 +62,8 @@ Open http://localhost:3000
 ## 📡 Data Source
 
 - **AGMARKNET**, Ministry of Agriculture & Farmers Welfare, via [data.gov.in](https://www.data.gov.in/resource/current-daily-price-various-commodities-various-markets-mandi)
-- Resource ID: `9ef84268-d588-465a-a308-a864a43d0070`
 - Prices are per quintal (100 kg), reported daily and may be delayed.
 
 ## ⚠️ Disclaimer
 
 Prices are indicative reports, not a guaranteed offer.
-
-## 👤 Author
-
-Made by [Rijiya001](https://github.com/Rijiya001)
